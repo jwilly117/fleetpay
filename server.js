@@ -1,6 +1,16 @@
 
 const express = require('express');
 const sql = require('mssql');
+const cors = require('cors'); // Import cors middleware
+
+
+// Initialize Express app
+const app = express();
+const port = 3000;
+
+// Enable CORS for all routes
+app.use(cors());
+
 
 const config = {
     user: 'sa',
@@ -14,10 +24,6 @@ const config = {
     }
 };
 
-
-// Initialize Express app
-const app = express();
-const port = 3000;
 
 
 // Endpoint to get data from the 'Lowes' table
