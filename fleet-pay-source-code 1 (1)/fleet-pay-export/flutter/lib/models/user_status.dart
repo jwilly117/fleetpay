@@ -1,0 +1,11 @@
+enum UserStatus {
+  INVITED,
+
+  PENDING_ONBOARDING,
+
+  ACTIVE,
+
+  DISABLED,
+
+  ARCHIVED,
+}

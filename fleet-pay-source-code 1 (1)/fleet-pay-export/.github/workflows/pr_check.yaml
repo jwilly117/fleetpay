@@ -1,0 +1,94 @@
+name: Analyzer
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    branches:
+      - main
+      - production
+
+jobs:
+  detect-changes:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.detect-changes.outputs.api }}
+      app: ${{ steps.detect-changes.outputs.app }}
+      flutter: ${{ steps.detect-changes.outputs.flutter }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: detect-changes
+        with:
+          filters: |
+            api:
+              - 'api/**'
+            app:
+              - 'app/**'
+            flutter:
+              - 'flutter/**'
+  flutter-check:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.flutter == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.2"
+
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: ./flutter
+
+      - name: Analyze Flutter
+        run: flutter analyze
+        working-directory: ./flutter
+
+  app-check:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.app == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Get dependencies
+        run: yarn
+        working-directory: ./app
+
+      - name: Lint app
+        run: yarn build
+        working-directory: ./app
+
+  api-check:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.api == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./api
+
+      - name: Build Project
+        run: yarn build
+        working-directory: ./api

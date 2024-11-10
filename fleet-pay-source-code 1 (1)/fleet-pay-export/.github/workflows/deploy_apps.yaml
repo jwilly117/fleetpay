@@ -1,0 +1,123 @@
+name: Deploy Apps
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy-api-app:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-api-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Deploy API and APP
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 167.71.81.172
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: ./deploy.sh
+
+  deploy-flutter:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-flutter-${{ github.ref }}
+      cancel-in-progress: true
+    defaults:
+      run:
+        working-directory: flutter/
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "zulu"
+
+      - name: Configure Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.2"
+
+      - name: Flutter Doctor
+        run: |
+          java --version
+          flutter doctor -v
+
+      - name: Generate Build Metadata
+        id: slack_message
+        run: |
+          echo "version=$(grep -o 'version: .*' pubspec.yaml | awk '{print $2}')" >> $GITHUB_OUTPUT
+          echo "commit_message=$(git log -1 --pretty=format:'%s')" >> $GITHUB_OUTPUT
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate models using freezed
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Generate an APK
+        run: flutter build apk
+
+      - name: Upload to artifacts to slack
+        run: |
+          curl -X POST \
+           -H "Content-Type: application/json" \
+           -H "Authorization: Bearer ${{ secrets.SLACK_TOKEN }}" \
+           -d '{
+             "channel": "${{ secrets.CHANNEL_ID }}",
+             "blocks": [
+               {
+                 "type": "header",
+                 "text": {
+                   "type": "plain_text",
+                   "text": "New version available",
+                   "emoji": true
+                 }
+               },
+               {
+                 "type": "section",
+                 "fields": [
+                   {
+                     "type": "mrkdwn",
+                     "text": "*Version:*\n${{ steps.slack_message.outputs.version }}"
+                   },
+                   {
+                     "type": "mrkdwn",
+                     "text": "*Environment:*\n${{ env.FLAVOR }}"
+                   }
+                 ]
+               },
+               {
+                 "type": "section",
+                 "fields": [
+                   {
+                     "type": "mrkdwn",
+                     "text": "*Branch:*\n${{ github.base_ref }}"
+                   },
+                   {
+                     "type": "mrkdwn",
+                     "text": "*Commit Hash:*\n${{ github.sha }}"
+                   }
+                 ]
+               },
+               {
+                 "type": "section",
+                 "text": {
+                     "type": "mrkdwn",
+                     "text": "*Changes:*\n${{ steps.slack_message.outputs.commit_message }}"
+                   }
+               }
+             ]
+           }' \
+           https://slack.com/api/chat.postMessage
+
+           curl -m 500 \
+             -F file=@build/app/outputs/flutter-apk/app-release.apk \
+             -F channels=${{ secrets.CHANNEL_ID }} \
+             -F token=${{ secrets.SLACK_TOKEN }} \
+             -F title="${{ steps.slack_message.outputs.version }}.apk" \
+             https://slack.com/api/files.upload

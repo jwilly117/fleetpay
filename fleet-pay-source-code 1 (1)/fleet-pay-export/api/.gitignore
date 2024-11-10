@@ -1,0 +1,6 @@
+/node_modules
+/dist
+# --- start gitignore code ---
+.env
+service-account-key.json
+# --- end gitignore code ---

@@ -1,0 +1,2283 @@
+openapi: '3.0.0'
+info: 
+  title: 'backend'
+  version: '1.0.0'
+tags: 
+  - name: 'Auth'
+    description: ''
+  - name: 'Admin'
+    description: ''
+  - name: 'Company'
+    description: ''
+  - name: 'Contractor'
+    description: ''
+paths: 
+  /auth/login: 
+    post: 
+      tags: 
+        - 'Auth'
+      operationId: 'login'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                username: 
+                  type: 'string'
+                password: 
+                  type: 'string'
+                userType: 
+                  $ref: '#/components/schemas/UserType'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/AuthToken'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /auth/changePassword: 
+    post: 
+      tags: 
+        - 'Auth'
+      operationId: 'changePassword'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                oldPassword: 
+                  type: 'string'
+                newPassword: 
+                  type: 'string'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'string'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /auth/me: 
+    get: 
+      tags: 
+        - 'Auth'
+      operationId: 'me'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/User'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    patch: 
+      tags: 
+        - 'Auth'
+      operationId: 'updateMe'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                user: 
+                  $ref: '#/components/schemas/UserUpdateRequest'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/User'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /auth/forgotPassword/sendOtp: 
+    post: 
+      tags: 
+        - 'Auth'
+      operationId: 'sendForgotPasswordOtp'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                email: 
+                  type: 'string'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'string'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /auth/forgotPassword/validateOtp: 
+    post: 
+      tags: 
+        - 'Auth'
+      operationId: 'validateForgotPasswordOtp'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                requestId: 
+                  type: 'string'
+                token: 
+                  type: 'string'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'boolean'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /auth/forgotPassword/changePassword: 
+    post: 
+      tags: 
+        - 'Auth'
+      operationId: 'changePasswordWithOtp'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                requestId: 
+                  type: 'string'
+                token: 
+                  type: 'string'
+                newPassword: 
+                  type: 'string'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'boolean'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /auth/refreshToken: 
+    post: 
+      tags: 
+        - 'Auth'
+      operationId: 'refreshToken'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                refreshToken: 
+                  type: 'string'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/AuthToken'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /admin/company/onboard: 
+    post: 
+      tags: 
+        - 'Admin'
+      operationId: 'onboardCompany'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                company: 
+                  $ref: '#/components/schemas/NewCompany'
+                user: 
+                  $ref: '#/components/schemas/NewUser'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/CompanyUser'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/list: 
+    get: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompaniesWithMyRole'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'array'
+                    nullable: false
+                    description: ''
+                    items: 
+                      $ref: '#/components/schemas/CompanyUser'
+                      nullable: false
+                      description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/selectCompany: 
+    post: 
+      tags: 
+        - 'Company'
+      operationId: 'changeSelectedCompany'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                companyId: 
+                  type: 'string'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/User'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/user: 
+    get: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompanyUsers'
+      parameters: 
+        - name: 'companyId'
+          in: 'query'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'array'
+                    nullable: false
+                    description: ''
+                    items: 
+                      $ref: '#/components/schemas/CompanyUser'
+                      nullable: false
+                      description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    post: 
+      tags: 
+        - 'Company'
+      operationId: 'addCompanyUser'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                companyId: 
+                  type: 'string'
+                role: 
+                  $ref: '#/components/schemas/Role'
+                user: 
+                  $ref: '#/components/schemas/NewUser'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/CompanyUser'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/user/{adminId}: 
+    get: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompanyUser'
+      parameters: 
+        - name: 'adminId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/CompanyUser'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    put: 
+      tags: 
+        - 'Company'
+      operationId: 'updateCompanyUser'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                admin: 
+                  $ref: '#/components/schemas/CompanyUser'
+      parameters: 
+        - name: 'adminId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/CompanyUser'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    delete: 
+      tags: 
+        - 'Company'
+      operationId: 'deleteCompanyUser'
+      parameters: 
+        - name: 'adminId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'string'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/contractor: 
+    get: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompanyContractors'
+      parameters: 
+        - name: 'companyId'
+          in: 'query'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'array'
+                    nullable: false
+                    description: ''
+                    items: 
+                      $ref: '#/components/schemas/Contractor'
+                      nullable: false
+                      description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    post: 
+      tags: 
+        - 'Company'
+      operationId: 'addCompanyContractor'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                parentCompanyId: 
+                  type: 'string'
+                request: 
+                  $ref: '#/components/schemas/NewContractorRequest'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Contractor'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/contractor/{contractorId}: 
+    get: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompanyContractor'
+      parameters: 
+        - name: 'contractorId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Contractor'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    put: 
+      tags: 
+        - 'Company'
+      operationId: 'updateCompanyContractor'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                contractor: 
+                  $ref: '#/components/schemas/Contractor'
+      parameters: 
+        - name: 'contractorId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Contractor'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    delete: 
+      tags: 
+        - 'Company'
+      operationId: 'deleteCompanyContractor'
+      parameters: 
+        - name: 'contractorId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'string'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/transaction: 
+    post: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompanyTransactions'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                companyId: 
+                  type: 'string'
+                pageDetail: 
+                  $ref: '#/components/schemas/PageRequest'
+                filter: 
+                  $ref: '#/components/schemas/TransactionRequestFilter'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/PaginatedTransactions'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/transaction/{transactionId}: 
+    get: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompanyTransaction'
+      parameters: 
+        - name: 'transactionId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Transaction'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    put: 
+      tags: 
+        - 'Company'
+      operationId: 'updateCompanyTransactionStatus'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                status: 
+                  $ref: '#/components/schemas/TransactionStatus'
+                remarks: 
+                  type: 'string'
+      parameters: 
+        - name: 'transactionId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Transaction'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/transaction/{transactionId}/remarks: 
+    post: 
+      tags: 
+        - 'Company'
+      operationId: 'addCompanyRemarkOnTransaction'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                remarks: 
+                  type: 'string'
+      parameters: 
+        - name: 'transactionId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/TransactionRemark'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /company/{companyId}: 
+    get: 
+      tags: 
+        - 'Company'
+      operationId: 'getCompany'
+      parameters: 
+        - name: 'companyId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Company'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    put: 
+      tags: 
+        - 'Company'
+      operationId: 'updateCompany'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                company: 
+                  $ref: '#/components/schemas/NewCompany'
+      parameters: 
+        - name: 'companyId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Company'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /contractor/: 
+    get: 
+      tags: 
+        - 'Contractor'
+      operationId: 'getContractors'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'array'
+                    nullable: false
+                    description: ''
+                    items: 
+                      $ref: '#/components/schemas/Contractor'
+                      nullable: false
+                      description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /contractor/summary: 
+    get: 
+      tags: 
+        - 'Contractor'
+      operationId: 'getContractorDashboard'
+      parameters: 
+        - name: 'contractorId'
+          in: 'query'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/ContractorDashboardSummary'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /contractor/transaction: 
+    get: 
+      tags: 
+        - 'Contractor'
+      operationId: 'getContractorTransactions'
+      parameters: 
+        - name: 'contractorId'
+          in: 'query'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    type: 'array'
+                    nullable: false
+                    description: ''
+                    items: 
+                      $ref: '#/components/schemas/Transaction'
+                      nullable: false
+                      description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /contractor/transaction/{transactionId}: 
+    get: 
+      tags: 
+        - 'Contractor'
+      operationId: 'getContractorTransaction'
+      parameters: 
+        - name: 'transactionId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Transaction'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+    put: 
+      tags: 
+        - 'Contractor'
+      operationId: 'updateContractorTransactionStatus'
+      parameters: 
+        - name: 'transactionId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+        - name: 'status'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'object'
+            description: ''
+            nullable: false
+            properties: 
+              status: 
+                description: ''
+                $ref: '#/components/schemas/TransactionStatus'
+        - name: 'remarks'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Transaction'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /contractor/transaction/{transactionId}/remarks: 
+    post: 
+      tags: 
+        - 'Contractor'
+      operationId: 'addContractorRemarkOnTransaction'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                remarks: 
+                  type: 'string'
+      parameters: 
+        - name: 'transactionId'
+          in: 'path'
+          required: true
+          schema: 
+            type: 'string'
+            nullable: false
+            description: ''
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/TransactionRemark'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /contractor/transaction/preview: 
+    post: 
+      tags: 
+        - 'Contractor'
+      operationId: 'previewFundRequest'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                request: 
+                  $ref: '#/components/schemas/NewFundRequest'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/FundRequestPreview'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+  /contractor/transaction/add: 
+    post: 
+      tags: 
+        - 'Contractor'
+      operationId: 'requestFund'
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              type: 'object'
+              properties: 
+                request: 
+                  $ref: '#/components/schemas/NewFundRequest'
+      responses: 
+        200: 
+          description: 'Success'
+          content: 
+            application/json: 
+              schema: 
+                type: 'object'
+                properties: 
+                  code: 
+                    type: 'integer'
+                    description: 'The status code of the response'
+                  result: 
+                    $ref: '#/components/schemas/Transaction'
+                    nullable: false
+                    description: ''
+                  error: 
+                    type: 'string'
+                    nullable: true
+                    description: 'Contains error message if any'
+                required: 
+                  - 'code'
+components: 
+  schemas: 
+    AuthUser: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        username: 
+          type: 'string'
+          nullable: false
+          description: ''
+        passwordHash: 
+          type: 'string'
+          nullable: false
+          description: ''
+        salt: 
+          type: 'string'
+          nullable: false
+          description: ''
+        superAdmin: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+      required: 
+        - 'id'
+        - 'username'
+        - 'passwordHash'
+        - 'salt'
+        - 'superAdmin'
+    UserSession: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        userId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        refreshToken: 
+          type: 'string'
+          nullable: false
+          description: ''
+        ipAddress: 
+          type: 'string'
+          nullable: true
+          description: ''
+        expiresAt: 
+          type: 'string'
+          nullable: false
+          description: ''
+      required: 
+        - 'id'
+        - 'userId'
+        - 'refreshToken'
+        - 'expiresAt'
+    AuthToken: 
+      type: 'object'
+      description: ''
+      properties: 
+        accessToken: 
+          type: 'string'
+          nullable: false
+          description: ''
+        refreshToken: 
+          type: 'string'
+          nullable: false
+          description: ''
+        expiresAt: 
+          type: 'string'
+          nullable: false
+          description: ''
+      required: 
+        - 'accessToken'
+        - 'refreshToken'
+        - 'expiresAt'
+    User: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        email: 
+          type: 'string'
+          nullable: false
+          description: ''
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        profilePicture: 
+          type: 'string'
+          nullable: true
+          description: ''
+        phoneNumber: 
+          type: 'string'
+          nullable: true
+          description: ''
+        username: 
+          type: 'string'
+          nullable: true
+          description: ''
+        multiFactorAuthEnabled: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+        selectedCompanyId: 
+          type: 'string'
+          nullable: true
+          description: ''
+        status: 
+          $ref: '#/components/schemas/AccountStatus'
+          nullable: true
+          description: ''
+        fcmTokens: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            type: 'array'
+            nullable: false
+            description: ''
+      required: 
+        - 'id'
+        - 'email'
+        - 'name'
+        - 'multiFactorAuthEnabled'
+        - 'fcmTokens'
+    AccountStatus: 
+      type: 'string'
+      enum: 
+        - 'CHANGE_PASSWORD'
+        - 'COMPLETED'
+    SystemLog: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        userId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        companyId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        user: 
+          $ref: '#/components/schemas/User'
+          nullable: true
+          description: ''
+        action: 
+          type: 'string'
+          nullable: false
+          description: ''
+        message: 
+          type: 'string'
+          nullable: false
+          description: ''
+        createdAt: 
+          type: 'string'
+          nullable: false
+          description: ''
+      required: 
+        - 'id'
+        - 'userId'
+        - 'companyId'
+        - 'action'
+        - 'message'
+        - 'createdAt'
+    NewUser: 
+      type: 'object'
+      description: ''
+      properties: 
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        email: 
+          type: 'string'
+          nullable: false
+          description: ''
+        username: 
+          type: 'string'
+          nullable: false
+          description: ''
+        profilePicture: 
+          type: 'string'
+          nullable: true
+          description: ''
+        phoneNumber: 
+          type: 'string'
+          nullable: true
+          description: ''
+      required: 
+        - 'name'
+        - 'email'
+        - 'username'
+    UserUpdateRequest: 
+      type: 'object'
+      description: ''
+      properties: 
+        name: 
+          type: 'string'
+          nullable: true
+          description: ''
+        profilePicture: 
+          type: 'string'
+          nullable: true
+          description: ''
+        phoneNumber: 
+          type: 'string'
+          nullable: true
+          description: ''
+        fcmTokens: 
+          type: 'array'
+          nullable: true
+          description: ''
+          items: 
+            type: 'array'
+            nullable: true
+            description: ''
+    Company: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        emails: 
+          type: 'array'
+          nullable: true
+          description: ''
+          items: 
+            type: 'array'
+            nullable: true
+            description: ''
+        phoneNumbers: 
+          type: 'array'
+          nullable: true
+          description: ''
+          items: 
+            type: 'array'
+            nullable: true
+            description: ''
+        profilePicture: 
+          type: 'string'
+          nullable: true
+          description: ''
+        businessHours: 
+          $ref: '#/components/schemas/CompanyBusinessHours'
+          nullable: true
+          description: ''
+        notificationSettings: 
+          $ref: '#/components/schemas/NotificationSettings'
+          nullable: true
+          description: ''
+        accountingDepartmentContacts: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            $ref: '#/components/schemas/Contact'
+            nullable: false
+            description: ''
+      required: 
+        - 'id'
+        - 'name'
+        - 'accountingDepartmentContacts'
+    Contact: 
+      type: 'object'
+      description: ''
+      properties: 
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        email: 
+          type: 'string'
+          nullable: false
+          description: ''
+        phone: 
+          type: 'string'
+          nullable: true
+          description: ''
+      required: 
+        - 'name'
+        - 'email'
+    NewCompany: 
+      type: 'object'
+      description: ''
+      properties: 
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        profilePicture: 
+          type: 'string'
+          nullable: true
+          description: ''
+        emails: 
+          type: 'array'
+          nullable: true
+          description: ''
+          items: 
+            type: 'array'
+            nullable: true
+            description: ''
+        phoneNumbers: 
+          type: 'array'
+          nullable: true
+          description: ''
+          items: 
+            type: 'array'
+            nullable: true
+            description: ''
+        businessHours: 
+          $ref: '#/components/schemas/CompanyBusinessHours'
+          nullable: true
+          description: ''
+        notificationSettings: 
+          $ref: '#/components/schemas/NotificationSettings'
+          nullable: true
+          description: ''
+        accountingDepartmentContact: 
+          $ref: '#/components/schemas/Contact'
+          nullable: true
+          description: ''
+      required: 
+        - 'name'
+    CompanyBusinessHours: 
+      type: 'object'
+      description: ''
+      properties: 
+        openingHour: 
+          type: 'string'
+          nullable: false
+          description: ''
+        closingHour: 
+          type: 'string'
+          nullable: false
+          description: ''
+        timezone: 
+          type: 'string'
+          nullable: false
+          description: ''
+      required: 
+        - 'openingHour'
+        - 'closingHour'
+        - 'timezone'
+    NotificationSettings: 
+      type: 'object'
+      description: ''
+      properties: 
+        emailNotifications: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+        emails: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            type: 'array'
+            nullable: false
+            description: ''
+        smsNotifications: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+        phoneNumbers: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            type: 'array'
+            nullable: false
+            description: ''
+      required: 
+        - 'emailNotifications'
+        - 'emails'
+        - 'smsNotifications'
+        - 'phoneNumbers'
+    UserType: 
+      type: 'string'
+      enum: 
+        - 'SUPER_ADMIN'
+        - 'ADMIN'
+        - 'USER'
+    CompanyUser: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        companyId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        company: 
+          $ref: '#/components/schemas/Company'
+          nullable: true
+          description: ''
+        userId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        user: 
+          $ref: '#/components/schemas/User'
+          nullable: true
+          description: ''
+        role: 
+          $ref: '#/components/schemas/Role'
+          nullable: false
+          description: ''
+        status: 
+          $ref: '#/components/schemas/UserStatus'
+          nullable: false
+          description: ''
+      required: 
+        - 'id'
+        - 'companyId'
+        - 'userId'
+        - 'role'
+        - 'status'
+    UserStatus: 
+      type: 'string'
+      enum: 
+        - 'INVITED'
+        - 'PENDING_ONBOARDING'
+        - 'ACTIVE'
+        - 'DISABLED'
+        - 'ARCHIVED'
+    ContractorStatus: 
+      type: 'string'
+      enum: 
+        - 'INVITED'
+        - 'ACCEPTED'
+        - 'PENDING_ONBOARDING'
+        - 'DISABLED'
+        - 'ARCHIVED'
+    Role: 
+      type: 'string'
+      enum: 
+        - 'ADMIN'
+        - 'MANAGER'
+        - 'FINANCE'
+        - 'HR'
+        - 'VIEWER'
+    NewContractorRequest: 
+      type: 'object'
+      description: ''
+      properties: 
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        emails: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            type: 'array'
+            nullable: false
+            description: ''
+        phoneNumbers: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            type: 'array'
+            nullable: false
+            description: ''
+        user: 
+          $ref: '#/components/schemas/NewUser'
+          nullable: false
+          description: ''
+        fundingSetting: 
+          $ref: '#/components/schemas/FundingSetting'
+          nullable: false
+          description: ''
+        paymentStructure: 
+          $ref: '#/components/schemas/PaymentStructure'
+          nullable: false
+          description: ''
+      required: 
+        - 'name'
+        - 'emails'
+        - 'phoneNumbers'
+        - 'user'
+        - 'fundingSetting'
+        - 'paymentStructure'
+    Contractor: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        userId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        user: 
+          $ref: '#/components/schemas/User'
+          nullable: true
+          description: ''
+        pendingInvoiceAmount: 
+          type: 'number'
+          nullable: false
+          description: ''
+        emails: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            type: 'array'
+            nullable: false
+            description: ''
+        phoneNumbers: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            type: 'array'
+            nullable: false
+            description: ''
+        companyId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        company: 
+          $ref: '#/components/schemas/Company'
+          nullable: true
+          description: ''
+        primaryContact: 
+          $ref: '#/components/schemas/Contact'
+          nullable: false
+          description: ''
+        fundingSetting: 
+          $ref: '#/components/schemas/FundingSetting'
+          nullable: false
+          description: ''
+        paymentStructure: 
+          $ref: '#/components/schemas/PaymentStructure'
+          nullable: false
+          description: ''
+        deleted: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+        lasPaymentRequestDate: 
+          type: 'string'
+          nullable: true
+          description: ''
+      required: 
+        - 'id'
+        - 'name'
+        - 'userId'
+        - 'pendingInvoiceAmount'
+        - 'emails'
+        - 'phoneNumbers'
+        - 'companyId'
+        - 'primaryContact'
+        - 'fundingSetting'
+        - 'paymentStructure'
+        - 'deleted'
+    UpdateContractorRequest: 
+      type: 'object'
+      description: ''
+      properties: 
+        name: 
+          type: 'string'
+          nullable: false
+          description: ''
+        primaryContact: 
+          $ref: '#/components/schemas/Contact'
+          nullable: false
+          description: ''
+        fundingSetting: 
+          $ref: '#/components/schemas/FundingSetting'
+          nullable: true
+          description: ''
+        paymentStructure: 
+          $ref: '#/components/schemas/PaymentStructure'
+          nullable: true
+          description: ''
+      required: 
+        - 'name'
+        - 'primaryContact'
+    FundingSetting: 
+      type: 'object'
+      description: ''
+      properties: 
+        fundingLimitType: 
+          $ref: '#/components/schemas/FundingLimitType'
+          nullable: false
+          description: ''
+        fundingLimit: 
+          type: 'number'
+          nullable: false
+          description: ''
+        transactionFee: 
+          type: 'number'
+          nullable: false
+          description: ''
+        postageFee: 
+          type: 'number'
+          nullable: false
+          description: ''
+        fundingAmount: 
+          type: 'number'
+          nullable: false
+          description: ''
+      required: 
+        - 'fundingLimitType'
+        - 'fundingLimit'
+        - 'transactionFee'
+        - 'postageFee'
+        - 'fundingAmount'
+    PaymentStructure: 
+      type: 'object'
+      description: ''
+      properties: 
+        paymentInterval: 
+          $ref: '#/components/schemas/PaymentInterval'
+          nullable: false
+          description: ''
+        cycleStartDate: 
+          type: 'string'
+          nullable: false
+          description: ''
+        cycleEndDate: 
+          type: 'string'
+          nullable: true
+          description: ''
+      required: 
+        - 'paymentInterval'
+        - 'cycleStartDate'
+    PaymentInterval: 
+      type: 'string'
+      enum: 
+        - 'DAILY'
+        - 'WEEKLY'
+        - 'BIWEEKLY'
+        - 'MONTHLY'
+    ContractorDashboardSummary: 
+      type: 'object'
+      description: ''
+      properties: 
+        totalFunds: 
+          type: 'number'
+          nullable: false
+          description: ''
+        pendingFunds: 
+          type: 'number'
+          nullable: false
+          description: ''
+        approvedFunds: 
+          type: 'number'
+          nullable: false
+          description: ''
+        usedFunds: 
+          type: 'number'
+          nullable: false
+          description: ''
+        availableFund: 
+          type: 'number'
+          nullable: false
+          description: ''
+      required: 
+        - 'totalFunds'
+        - 'pendingFunds'
+        - 'approvedFunds'
+        - 'usedFunds'
+        - 'availableFund'
+    NewFundRequest: 
+      type: 'object'
+      description: ''
+      properties: 
+        amount: 
+          type: 'number'
+          nullable: false
+          description: ''
+        contractorId: 
+          type: 'string'
+          nullable: false
+          description: ''
+      required: 
+        - 'amount'
+        - 'contractorId'
+    FundRequestPreview: 
+      type: 'object'
+      description: ''
+      properties: 
+        companyId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        contractorId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        requestedAmount: 
+          type: 'number'
+          nullable: false
+          description: ''
+        fee: 
+          type: 'number'
+          nullable: false
+          description: ''
+        postageFee: 
+          type: 'number'
+          nullable: false
+          description: ''
+        netAmount: 
+          type: 'number'
+          nullable: false
+          description: ''
+      required: 
+        - 'companyId'
+        - 'contractorId'
+        - 'requestedAmount'
+        - 'fee'
+        - 'postageFee'
+        - 'netAmount'
+    Transaction: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        createdAt: 
+          type: 'string'
+          nullable: false
+          description: ''
+        requestedAmount: 
+          type: 'number'
+          nullable: false
+          description: ''
+        fee: 
+          type: 'number'
+          nullable: false
+          description: ''
+        postageFee: 
+          type: 'number'
+          nullable: false
+          description: ''
+        netAmount: 
+          type: 'number'
+          nullable: false
+          description: ''
+        status: 
+          $ref: '#/components/schemas/TransactionStatus'
+          nullable: false
+          description: ''
+        companyId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        company: 
+          $ref: '#/components/schemas/Company'
+          nullable: true
+          description: ''
+        contractorId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        contractor: 
+          $ref: '#/components/schemas/Contractor'
+          nullable: true
+          description: ''
+        userId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        user: 
+          $ref: '#/components/schemas/User'
+          nullable: true
+          description: ''
+        remarks: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            $ref: '#/components/schemas/TransactionRemark'
+            nullable: false
+            description: ''
+      required: 
+        - 'id'
+        - 'createdAt'
+        - 'requestedAmount'
+        - 'fee'
+        - 'postageFee'
+        - 'netAmount'
+        - 'status'
+        - 'companyId'
+        - 'contractorId'
+        - 'userId'
+        - 'remarks'
+    TransactionRemark: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        userId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        user: 
+          $ref: '#/components/schemas/User'
+          nullable: true
+          description: ''
+        createdAt: 
+          type: 'string'
+          nullable: false
+          description: ''
+        remarks: 
+          type: 'string'
+          nullable: false
+          description: ''
+        status: 
+          $ref: '#/components/schemas/TransactionStatus'
+          nullable: true
+          description: ''
+      required: 
+        - 'id'
+        - 'userId'
+        - 'createdAt'
+        - 'remarks'
+    TransactionStatus: 
+      type: 'string'
+      enum: 
+        - 'PENDING'
+        - 'APPROVED'
+        - 'DENIED'
+        - 'COMPLETED'
+        - 'FAILED'
+    FundingLimitType: 
+      type: 'string'
+      enum: 
+        - 'FIXED_AMOUNT'
+        - 'PERCENTAGE'
+    PaginatedTransactions: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        transactions: 
+          type: 'array'
+          nullable: false
+          description: ''
+          items: 
+            $ref: '#/components/schemas/Transaction'
+            nullable: false
+            description: ''
+        metadata: 
+          $ref: '#/components/schemas/PaginationMetadata'
+          nullable: false
+          description: ''
+      required: 
+        - 'id'
+        - 'transactions'
+        - 'metadata'
+    PageRequest: 
+      type: 'object'
+      description: ''
+      properties: 
+        page: 
+          type: 'integer'
+          nullable: false
+          description: ''
+        size: 
+          type: 'integer'
+          nullable: false
+          description: ''
+      required: 
+        - 'page'
+        - 'size'
+    TransactionRequestFilter: 
+      type: 'object'
+      description: ''
+      properties: 
+        contractorId: 
+          type: 'string'
+          nullable: true
+          description: ''
+        startDate: 
+          type: 'string'
+          nullable: true
+          description: ''
+        endDate: 
+          type: 'string'
+          nullable: true
+          description: ''
+        status: 
+          type: 'array'
+          nullable: true
+          description: ''
+          items: 
+            $ref: '#/components/schemas/TransactionStatus'
+            nullable: true
+            description: ''
+    PaginationMetadata: 
+      type: 'object'
+      description: ''
+      properties: 
+        total: 
+          type: 'integer'
+          nullable: false
+          description: ''
+        page: 
+          type: 'integer'
+          nullable: false
+          description: ''
+        size: 
+          type: 'integer'
+          nullable: false
+          description: ''
+        previous: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+        next: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+      required: 
+        - 'total'
+        - 'page'
+        - 'size'
+        - 'previous'
+        - 'next'
+    ForgotPasswordRequest: 
+      type: 'object'
+      description: ''
+      properties: 
+        id: 
+          type: 'string'
+          nullable: false
+          description: ''
+        fulfilled: 
+          type: 'boolean'
+          nullable: false
+          description: ''
+        token: 
+          type: 'string'
+          nullable: false
+          description: ''
+        userId: 
+          type: 'string'
+          nullable: false
+          description: ''
+        user: 
+          $ref: '#/components/schemas/User'
+          nullable: true
+          description: ''
+        createdAt: 
+          type: 'string'
+          nullable: false
+          description: ''
+        expiresAt: 
+          type: 'string'
+          nullable: false
+          description: ''
+      required: 
+        - 'id'
+        - 'fulfilled'
+        - 'token'
+        - 'userId'
+        - 'createdAt'
+        - 'expiresAt'

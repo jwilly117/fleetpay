@@ -1,0 +1,439 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+  // --- start db_config code ---
+
+  // --- end db_config code ---
+}
+
+// --- start root_config code ---
+
+// --- end root_config code ---
+
+model AuthUser {
+  id           String  @id @default(uuid()) @map("_id")
+  username     String  @unique
+  passwordHash String
+  salt         String
+  superAdmin   Boolean @default(false)
+  // --- start extra__auth_user_fields code ---
+
+  // --- end extra__auth_user_fields code ---
+}
+
+model UserSession {
+  id           String   @id @default(uuid()) @map("_id")
+  userId       String
+  refreshToken String
+  ipAddress    String?
+  expiresAt    DateTime
+  // --- start extra__user_session_fields code ---
+
+  // --- end extra__user_session_fields code ---
+}
+
+type AuthToken {
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  // --- start extra__auth_token_fields code ---
+
+  // --- end extra__auth_token_fields code ---
+}
+
+model User {
+  id                     String         @id @default(uuid()) @map("_id")
+  email                  String         @unique
+  name                   String
+  profilePicture         String?
+  phoneNumber            String?
+  username               String?
+  multiFactorAuthEnabled Boolean
+  selectedCompanyId      String?
+  status                 AccountStatus?
+  fcmTokens              String[]
+  // --- start extra__user_fields code ---
+
+  // --- end extra__user_fields code ---
+  SystemLog             SystemLog[]
+  CompanyUser           CompanyUser[]
+  Contractor            Contractor[]
+  Transaction           Transaction[]
+  TransactionRemark     TransactionRemark[]
+  ForgotPasswordRequest ForgotPasswordRequest[]
+}
+
+enum AccountStatus {
+  CHANGE_PASSWORD
+  COMPLETED
+  // --- start account_status_extra code ---
+
+  // --- end account_status_extra code ---
+}
+
+model SystemLog {
+  id        String   @id @default(uuid()) @map("_id")
+  userId    String
+  companyId String
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  message   String
+  createdAt DateTime
+  // --- start extra__system_log_fields code ---
+
+  // --- end extra__system_log_fields code ---
+}
+
+type NewUser {
+  name           String
+  email          String
+  username       String
+  profilePicture String?
+  phoneNumber    String?
+  // --- start extra__new_user_fields code ---
+
+  // --- end extra__new_user_fields code ---
+}
+
+type UserUpdateRequest {
+  name           String?
+  profilePicture String?
+  phoneNumber    String?
+  fcmTokens      String[] @default([])
+  // --- start extra__user_update_request_fields code ---
+
+  // --- end extra__user_update_request_fields code ---
+}
+
+model Company {
+  id                           String                @id @default(uuid()) @map("_id")
+  name                         String
+  emails                       String[]              @default([])
+  phoneNumbers                 String[]              @default([])
+  profilePicture               String?
+  businessHours                CompanyBusinessHours?
+  notificationSettings         NotificationSettings?
+  accountingDepartmentContacts Contact[]
+  // --- start extra__company_fields code ---
+
+  // --- end extra__company_fields code ---
+  CompanyUser CompanyUser[]
+  Contractor  Contractor[]
+  Transaction Transaction[]
+}
+
+type Contact {
+  name  String
+  email String
+  phone String?
+  // --- start extra__contact_fields code ---
+
+  // --- end extra__contact_fields code ---
+}
+
+type NewCompany {
+  name                        String
+  profilePicture              String?
+  emails                      String[]              @default([])
+  phoneNumbers                String[]              @default([])
+  businessHours               CompanyBusinessHours?
+  notificationSettings        NotificationSettings?
+  accountingDepartmentContact Contact?
+  // --- start extra__new_company_fields code ---
+
+  // --- end extra__new_company_fields code ---
+}
+
+type CompanyBusinessHours {
+  openingHour String
+  closingHour String
+  timezone    String
+  // --- start extra__company_business_hours_fields code ---
+
+  // --- end extra__company_business_hours_fields code ---
+}
+
+type NotificationSettings {
+  emailNotifications Boolean
+  emails             String[]
+  smsNotifications   Boolean
+  phoneNumbers       String[]
+  // --- start extra__notification_settings_fields code ---
+
+  // --- end extra__notification_settings_fields code ---
+}
+
+enum UserType {
+  SUPER_ADMIN
+  ADMIN
+  USER
+  // --- start user_type_extra code ---
+
+  // --- end user_type_extra code ---
+}
+
+model CompanyUser {
+  id        String     @id @default(uuid()) @map("_id")
+  companyId String
+  company   Company?   @relation(fields: [companyId], references: [id])
+  userId    String
+  user      User?      @relation(fields: [userId], references: [id])
+  role      Role       @default(ADMIN)
+  status    UserStatus
+  // --- start extra__company_user_fields code ---
+
+  // --- end extra__company_user_fields code ---
+}
+
+enum UserStatus {
+  INVITED
+  PENDING_ONBOARDING
+  ACTIVE
+  DISABLED
+  ARCHIVED
+  // --- start user_status_extra code ---
+
+  // --- end user_status_extra code ---
+}
+
+enum ContractorStatus {
+  INVITED
+  ACCEPTED
+  PENDING_ONBOARDING
+  DISABLED
+  ARCHIVED
+  // --- start contractor_status_extra code ---
+
+  // --- end contractor_status_extra code ---
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  FINANCE
+  HR
+  VIEWER
+  // --- start role_extra code ---
+
+  // --- end role_extra code ---
+}
+
+type NewContractorRequest {
+  name             String
+  emails           String[]
+  phoneNumbers     String[]
+  user             NewUser
+  fundingSetting   FundingSetting
+  paymentStructure PaymentStructure
+  // --- start extra__new_contractor_request_fields code ---
+
+  // --- end extra__new_contractor_request_fields code ---
+}
+
+model Contractor {
+  id                    String           @id @default(uuid()) @map("_id")
+  name                  String
+  userId                String
+  user                  User?            @relation(fields: [userId], references: [id])
+  pendingInvoiceAmount  Float            @default(0)
+  emails                String[]
+  phoneNumbers          String[]
+  companyId             String
+  company               Company?         @relation(fields: [companyId], references: [id])
+  primaryContact        Contact
+  fundingSetting        FundingSetting
+  paymentStructure      PaymentStructure
+  deleted               Boolean
+  lasPaymentRequestDate DateTime?
+  // --- start extra__contractor_fields code ---
+
+  // --- end extra__contractor_fields code ---
+  Transaction Transaction[]
+}
+
+type UpdateContractorRequest {
+  name             String
+  primaryContact   Contact
+  fundingSetting   FundingSetting?
+  paymentStructure PaymentStructure?
+  // --- start extra__update_contractor_request_fields code ---
+
+  // --- end extra__update_contractor_request_fields code ---
+}
+
+type FundingSetting {
+  fundingLimitType FundingLimitType
+  fundingLimit     Float
+  transactionFee   Float
+  postageFee       Float
+  fundingAmount    Float
+  // --- start extra__funding_setting_fields code ---
+
+  // --- end extra__funding_setting_fields code ---
+}
+
+type PaymentStructure {
+  paymentInterval PaymentInterval
+  cycleStartDate  DateTime
+  cycleEndDate    DateTime?
+  // --- start extra__payment_structure_fields code ---
+
+  // --- end extra__payment_structure_fields code ---
+}
+
+enum PaymentInterval {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  // --- start payment_interval_extra code ---
+
+  // --- end payment_interval_extra code ---
+}
+
+type ContractorDashboardSummary {
+  totalFunds    Float
+  pendingFunds  Float
+  approvedFunds Float
+  usedFunds     Float
+  availableFund Float
+  // --- start extra__contractor_dashboard_summary_fields code ---
+
+  // --- end extra__contractor_dashboard_summary_fields code ---
+}
+
+type NewFundRequest {
+  amount       Float
+  contractorId String
+  // --- start extra__new_fund_request_fields code ---
+
+  // --- end extra__new_fund_request_fields code ---
+}
+
+type FundRequestPreview {
+  companyId       String
+  contractorId    String
+  requestedAmount Float
+  fee             Float
+  postageFee      Float
+  netAmount       Float
+  // --- start extra__fund_request_preview_fields code ---
+
+  // --- end extra__fund_request_preview_fields code ---
+}
+
+model Transaction {
+  id              String              @id @default(uuid()) @map("_id")
+  createdAt       DateTime
+  requestedAmount Float
+  fee             Float
+  postageFee      Float
+  netAmount       Float
+  status          TransactionStatus
+  companyId       String
+  company         Company?            @relation(fields: [companyId], references: [id])
+  contractorId    String
+  contractor      Contractor?         @relation(fields: [contractorId], references: [id])
+  userId          String
+  user            User?               @relation(fields: [userId], references: [id])
+  remarks         TransactionRemark[]
+  // --- start extra__transaction_fields code ---
+
+  // --- end extra__transaction_fields code ---
+  PaginatedTransactions   PaginatedTransactions? @relation(fields: [paginatedTransactionsId], references: [id])
+  paginatedTransactionsId String?
+}
+
+model TransactionRemark {
+  id        String             @id @default(uuid()) @map("_id")
+  userId    String
+  user      User?              @relation(fields: [userId], references: [id])
+  createdAt DateTime
+  remarks   String
+  status    TransactionStatus?
+  // --- start extra__transaction_remark_fields code ---
+
+  // --- end extra__transaction_remark_fields code ---
+  Transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId String?
+}
+
+enum TransactionStatus {
+  PENDING
+  APPROVED
+  DENIED
+  COMPLETED
+  FAILED
+  // --- start transaction_status_extra code ---
+
+  // --- end transaction_status_extra code ---
+}
+
+enum FundingLimitType {
+  FIXED_AMOUNT
+  PERCENTAGE
+  // --- start funding_limit_type_extra code ---
+
+  // --- end funding_limit_type_extra code ---
+}
+
+model PaginatedTransactions {
+  id           String             @id @default(uuid()) @map("_id")
+  transactions Transaction[]
+  metadata     PaginationMetadata
+  // --- start extra__paginated_transactions_fields code ---
+
+  // --- end extra__paginated_transactions_fields code ---
+}
+
+type PageRequest {
+  page Int
+  size Int
+  // --- start extra__page_request_fields code ---
+
+  // --- end extra__page_request_fields code ---
+}
+
+type TransactionRequestFilter {
+  contractorId String?
+  startDate    DateTime?
+  endDate      DateTime?
+  status       TransactionStatus[] @default([])
+  // --- start extra__transaction_request_filter_fields code ---
+
+  // --- end extra__transaction_request_filter_fields code ---
+}
+
+type PaginationMetadata {
+  total    Int
+  page     Int
+  size     Int
+  previous Boolean
+  next     Boolean
+  // --- start extra__pagination_metadata_fields code ---
+
+  // --- end extra__pagination_metadata_fields code ---
+}
+
+model ForgotPasswordRequest {
+  id        String   @id @default(uuid()) @map("_id")
+  fulfilled Boolean
+  token     String
+  userId    String
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime
+  expiresAt DateTime
+  // --- start extra__forgot_password_request_fields code ---
+
+  // --- end extra__forgot_password_request_fields code ---
+}

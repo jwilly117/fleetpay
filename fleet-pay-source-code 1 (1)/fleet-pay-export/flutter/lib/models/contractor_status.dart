@@ -1,0 +1,11 @@
+enum ContractorStatus {
+  INVITED,
+
+  ACCEPTED,
+
+  PENDING_ONBOARDING,
+
+  DISABLED,
+
+  ARCHIVED,
+}
