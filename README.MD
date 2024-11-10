@@ -1,7 +1,14 @@
 # Fleetpay - Application
+
+![Fleetpay demo login page](/img/fleetpaylogin.png)
+
 Please see Design Files Below
 
-https://www.figma.com/design/UAeUSDoLmLdELfQcZG9Hxh/FleetPay?node-id=1-5047&node-type=frame&t=poYXmudEH4UIn3Jo-0    
+Open editable version here - [Design Files](https://www.figma.com/design/UAeUSDoLmLdELfQcZG9Hxh/FleetPay?node-id=1-5047&node-type=frame&t=poYXmudEH4UIn3Jo-0).
+
+
+http://localhost:3000/api/lowes
+
 
 # Overview
 This is the beggining of the rebuild of Fleetpay under the Ellis Ventures Umbrella.
@@ -39,3 +46,15 @@ The original application was built in Flutter, however we will be making the cha
 
 https://reactnative.dev/
 
+
+
+## Week of 11.11.2024
+### Aaron
+
+
+
+### Jacque
+
+
+
+### Jake
