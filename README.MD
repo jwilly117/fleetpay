@@ -1,5 +1,6 @@
 # 🌐 Fleetpay - Application Development
 
+
 ![Fleetpay demo login page](/img/fleetpaylogin.png)
 
 **Please see Design Files Below**
@@ -49,12 +50,12 @@ https://reactnative.dev/
 
 
 ## Week of 11.11.2024
-### Aaron
+> Aaron
 
 
 
-### Jacque
+> Jacque
 
 
 
-### Jake
+> Jake
