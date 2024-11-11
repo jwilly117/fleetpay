@@ -4,7 +4,8 @@
 ![Fleetpay demo login page](/img/fleetpaylogin.png)
 
 <hr/>
-Demo Environment - To be used for discovery - [Demo](http://41.204.217.80:44445/login).
+
+Demo Environment - [Demo](http://41.204.217.80:44445/login).
 
 ### This will be taken down soon, so it is very important to get our instance up Asap. 
 
