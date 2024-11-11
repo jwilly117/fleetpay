@@ -5,6 +5,8 @@
 
 <hr/>
 
+**Please reference the temporary demo environment from Intrade's team**
+
 Demo Environment - [Demo Using Mongo](http://41.204.217.80:44445/login).
 
 > [!IMPORTANT]
