@@ -85,3 +85,7 @@ and work to translate them into the SQL database that will be provided.
 > Jake
 - [ ] First work to provide development database with authentication and access to all parties involved,
 - [ ] Then work with Jacque on previously stated tasks. 
+
+
+
+ ### Jacque Was here
