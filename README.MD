@@ -18,10 +18,16 @@ Demo Environment - [Demo Using Mongo](http://41.204.217.80:44445/login).
 
 Open editable version here - [Design Files](https://www.figma.com/design/UAeUSDoLmLdELfQcZG9Hxh/FleetPay?node-id=1-5047&node-type=frame&t=poYXmudEH4UIn3Jo-0).
 
+> [!IMPORTANT]
+> All contributors will need a figma account to work on this file, please do not clone or share outside this group. 
+
+<hr/>
 
 ### I will explain this API route once the SQL server is up and open for use
 
 http://localhost:3000/api/lowes
+
+<hr/>
 
 
 # Overview
