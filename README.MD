@@ -33,6 +33,9 @@ http://localhost:3000/api/lowes
 ### Database Below
 
 96.87.240.237
+sql.fleetpaid.com
+sa
+*********
 
 ** Need to create and strengthen user credentials
 
