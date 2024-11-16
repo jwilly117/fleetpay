@@ -30,6 +30,15 @@ http://localhost:3000/api/lowes
 <hr/>
 
 
+### Database Below
+
+96.87.240.237
+
+** Need to create and strengthen user credentials
+
+<hr/>
+
+
 # Overview
 This is the beggining of the rebuild of Fleetpay under the Ellis Ventures Umbrella.
 
@@ -85,3 +94,7 @@ and work to translate them into the SQL database that will be provided.
 > Jake
 - [ ] First work to provide development database with authentication and access to all parties involved,
 - [ ] Then work with Jacque on previously stated tasks. 
+
+
+
+ ### Jacque Was here
