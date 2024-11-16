@@ -15,6 +15,17 @@
         <p><strong>Phone:</strong> <span id="customer-phone"></span></p>
     </div>
 
+    <script>
+        function handleClick(value) {
+            fetchCustomerData(value);
+        }
+    </script>
+
+    <h1>Click a Button</h1>
+    <button onclick="handleClick('0')">Button 1</button>
+    <button onclick="handleClick('1')">Button 2</button>
+    <button onclick="handleClick('2')">Button 3</button>
+
     <!-- Link to the script to fetch and display data -->
     <script src="app.js"></script>
 </body>

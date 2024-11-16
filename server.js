@@ -15,7 +15,7 @@ app.use(cors());
 const config = {
     user: 'sa',
     password: 'Pringles117',
-    server: 'jwdbserver.com', // or your local IP address
+    server: '96.87.240.237', // or your local IP address
     port: 1433,
     database: 'LowesPOsTest',
     options: {

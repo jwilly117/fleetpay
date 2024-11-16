@@ -1,14 +1,14 @@
 // URL of your API endpoint
 const apiUrl = 'http://localhost:3000/api/lowes';
 
-async function fetchCustomerData() {
+async function fetchCustomerData(val) {
     try {
         // Fetch data from the API
         const response = await fetch(apiUrl);
         const data = await response.json();
 
         // Assuming data is an array and we want to display the first customer
-        const customer = data[1];
+        const customer = data[val];
 
         // Populate HTML with customer data
         document.getElementById('customer-id').textContent = customer.customer_id;
@@ -22,4 +22,4 @@ async function fetchCustomerData() {
 }
 
 // Call the function to fetch and display data
-fetchCustomerData();
+// fetchCustomerData();
