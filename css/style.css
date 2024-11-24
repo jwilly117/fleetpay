@@ -1,7 +1,7 @@
         /* General page styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #8db9e0; /* Light blue background */
+            background-color: #486177; /* Light blue background */
             color: #004080; /* Dark blue text */
             margin: 0;
             padding: 0;
@@ -75,4 +75,33 @@
             .page-header {
                 font-size: 1.8rem;
             }
+        }
+
+        /* Record list styling */
+        .records-container {
+            margin-top: 20px;
+            width: 350px;
+            background-color: #e6f7ff; /* Lighter blue background for the container */
+            border: 1px solid #b3d9ff; /* Soft blue border */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 350px;
+            text-align: left; /* Align content to the left */
+            margin-top: 20px;
+        }
+
+        .record {
+            padding: 10px;
+            color: white;
+            background-color: #3342e7;
+            border: 1px solid #b3d9ff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .record:hover {
+            background-color: #e0f0ff;
         }

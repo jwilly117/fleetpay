@@ -14,23 +14,82 @@
 </head>
 <body>
 
-        <!-- Main page header -->
-        <div class="page-header">Customer Dashboard</div>
+    <!-- Main page header -->
+    <div class="page-header" style="padding-top: 15px;">
+        <img src="img/fleetpay_dark.jpg" alt="" style="height: 50px;">
+        <p style="font-size: 14px;">Sql Database Testing Environment</p>
+    </div>
 
+    
     <br><br>
 
     <div class="container">
-        <div class="header">Customer Information</div>
+        <div class="header">User Information</div>
         <div class="customer-info">
-            <p><strong>Customer ID:</strong> <span id="customer-id">Loading...</span></p>
-            <p><strong>First Name:</strong> <span id="customer-first-name">Loading...</span></p>
-            <p><strong>Last Name:</strong> <span id="customer-last-name">Loading...</span></p>
-            <p><strong>Email:</strong> <span id="customer-email">Loading...</span></p>
-            <p><strong>Phone:</strong> <span id="customer-phone">Loading...</span></p>
+            <p><strong>User # / ID:</strong> <span id="customer-id">...</span></p>
+            <p><strong>First Name:</strong> <span id="customer-first-name">...</span></p>
+            <p><strong>Last Name:</strong> <span id="customer-last-name">...</span></p>
+            <p><strong>Email:</strong> <span id="customer-email">...</span></p>
+            <p><strong>Phone:</strong> <span id="customer-phone">...</span></p>
         </div>
     </div>
 
+    <!-- =========================================================================== -->
+
+    <!-- Records container -->
+    <div class="records-container" id="records-container">
+        <h3>All Customers</h3>
+        <p>Click on a customer to view their details above:</p>
+    </div>
+
+
     <script>
+        async function fetchAllCustomers() {
+            try {
+                // Fetch all records from the server
+                const response = await fetch('http://localhost:3000/api/lowes');
+                const customers = await response.json();
+
+                const recordsContainer = document.getElementById('records-container');
+
+                // Clear existing records
+                recordsContainer.innerHTML = '<h3>All Customers</h3><p>Click on a customer to view their details above:</p>';
+
+                // Populate the records container
+                customers.forEach(customer => {
+                    const recordDiv = document.createElement('div');
+                    recordDiv.classList.add('record');
+                    recordDiv.textContent = `${customer.customer_first_name} ${customer.customer_last_name}`;
+                    
+                    // Add a click event listener to populate fields
+                    recordDiv.addEventListener('click', () => {
+                        document.getElementById('customer-id').textContent = customer.customer_id;
+                        document.getElementById('customer-first-name').textContent = customer.customer_first_name;
+                        document.getElementById('customer-last-name').textContent = customer.customer_last_name;
+                        document.getElementById('customer-email').textContent = customer.customer_email;
+                        document.getElementById('customer-phone').textContent = customer.customer_phone;
+                    });
+
+                    recordsContainer.appendChild(recordDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+                alert('Failed to load customer records.');
+            }
+        }
+
+        // Fetch all customers on page load
+        fetchAllCustomers();
+    </script>
+
+
+
+
+    <!-- =========================================================================== -->
+
+    <!-- This is the previous button oriented list -->
+
+    <!-- <script>
         function handleClick(value) {
             fetchCustomerData(value);
         }
@@ -41,7 +100,19 @@
         <button onclick="handleClick('0')">Button 1</button>
         <button onclick="handleClick('1')">Button 2</button>
         <button onclick="handleClick('2')">Button 3</button>
+        <button onclick="handleClick('3')">Button 4</button>
 
+        <br>
+    </div>
+    <br> -->
+    
+
+    <!-- =========================================================================== -->
+
+
+    <div>
+        <br>
+        <a href="insert.html" style="color: white;">Go to Insert Page</a>
     </div>
 
 

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Customer</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            color: #004080; /* Dark blue text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack the header and content */
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Form container */
+        .form-container {
+            background-color: #e6f7ff; /* Lighter blue background */
+            border: 1px solid #b3d9ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            width: 350px;
+        }
+
+        .form-header {
+            background-color: #004080;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #b3d9ff;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #004080;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #003366;
+        }
+        .page-header {
+            width: 100%;
+            background-color: #004080; /* Dark blue */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main page header -->
+    <div class="page-header" style="padding-top: 15px;">
+        <img src="img/fleetpay_dark.jpg" alt="" style="height: 50px;">
+        <p style="font-size: 14px;">Sql Database Testing Environment</p>
+    </div>
+
+    
+    <br><br>
+
+
+
+    <div class="form-container">
+        <div class="form-header">Add Customer</div>
+        <form id="customer-form">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" name="firstName" required>
+
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" name="lastName" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+
+    <br>
+    <div>
+        <a href="index.html" style="color: rgb(255, 255, 255);">Go to Insert Page</a>
+    </div>
+
+
+    <script>
+        document.getElementById('customer-form').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get input values
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            try {
+                // Send data to the server via POST
+                const response = await fetch('http://localhost:3000/api/add-customer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ firstName, lastName, email, phone })
+                });
+
+                if (response.ok) {
+                    // alert('Customer added successfully!');
+                    document.getElementById('customer-form').reset();
+                     // Redirect back to the index page
+                     window.location.href = 'index.html'; // Replace with another page once this changes / view for react
+
+                } else {
+                    const error = await response.json();
+                    alert('Failed to add customer: ' + error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the customer.');
+            }
+        });
+    </script>
+</body>
+</html>
