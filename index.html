@@ -4,15 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Information</title>
+
+    <!-- Placeholder link to React / Bootstrap -->
+
+    <!-- Link local CSS Sheet -->
+    <link rel="stylesheet" href="css/style.css">
+
+
 </head>
 <body>
-    <h1>Customer Information</h1>
-    <div id="customer-info">
-        <p><strong>Customer ID:</strong> <span id="customer-id"></span></p>
-        <p><strong>First Name:</strong> <span id="customer-first-name"></span></p>
-        <p><strong>Last Name:</strong> <span id="customer-last-name"></span></p>
-        <p><strong>Email:</strong> <span id="customer-email"></span></p>
-        <p><strong>Phone:</strong> <span id="customer-phone"></span></p>
+
+        <!-- Main page header -->
+        <div class="page-header">Customer Dashboard</div>
+
+    <br><br>
+
+    <div class="container">
+        <div class="header">Customer Information</div>
+        <div class="customer-info">
+            <p><strong>Customer ID:</strong> <span id="customer-id">Loading...</span></p>
+            <p><strong>First Name:</strong> <span id="customer-first-name">Loading...</span></p>
+            <p><strong>Last Name:</strong> <span id="customer-last-name">Loading...</span></p>
+            <p><strong>Email:</strong> <span id="customer-email">Loading...</span></p>
+            <p><strong>Phone:</strong> <span id="customer-phone">Loading...</span></p>
+        </div>
     </div>
 
     <script>
@@ -20,13 +35,20 @@
             fetchCustomerData(value);
         }
     </script>
+    
+    <div class="container">
+        <h1>SQL Call testing points</h1>
+        <button onclick="handleClick('0')">Button 1</button>
+        <button onclick="handleClick('1')">Button 2</button>
+        <button onclick="handleClick('2')">Button 3</button>
 
-    <h1>Click a Button</h1>
-    <button onclick="handleClick('0')">Button 1</button>
-    <button onclick="handleClick('1')">Button 2</button>
-    <button onclick="handleClick('2')">Button 3</button>
+    </div>
+
 
     <!-- Link to the script to fetch and display data -->
     <script src="app.js"></script>
 </body>
 </html>
+
+
+

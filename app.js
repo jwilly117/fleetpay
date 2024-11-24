@@ -23,3 +23,4 @@ async function fetchCustomerData(val) {
 
 // Call the function to fetch and display data
 // fetchCustomerData();
+
