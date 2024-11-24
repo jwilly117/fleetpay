@@ -83,7 +83,7 @@ https://reactnative.dev/
 
 
 
-## Week of 11.11.2024
+## Upcoming --
 > Aaron
 - [ ] We will be moving from a Mongoose DB model over to SQL. I would like you to familiarize yourself with the current schemas  (fleet-pay-export\api\src\models\****)  
 and work to translate them into the SQL database that will be provided.
