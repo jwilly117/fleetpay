@@ -27,6 +27,8 @@ const config = {
 
 // Middleware
 app.use(bodyParser.json());
+app.use(express.json());
+
 
 
 // Endpoint to get data from the 'Lowes' table
@@ -67,6 +69,25 @@ app.post('/api/add-customer', async (req, res) => {
     } catch (err) {
         console.error('Error inserting customer:', err);
         res.status(500).json({ message: 'Failed to insert customer' });
+    }
+});
+
+
+// Endpoint to delete current user
+app.delete('/api/delete-customer/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const pool = await sql.connect(config);
+        const query = 'DELETE FROM Lowes.Lowes_customer WHERE customer_id = @id';
+        const request = pool.request();
+        request.input('id', sql.Int, id);
+
+        await request.query(query);
+        res.status(200).json({ message: 'Customer deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting customer:', err);
+        res.status(500).json({ message: 'Failed to delete customer' });
     }
 });
 

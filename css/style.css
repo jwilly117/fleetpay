@@ -25,7 +25,7 @@
 
         /* Center container */
         .container {
-            background-color: #e6f7ff; /* Lighter blue background for the container */
+            background-color: #97c5db; /* Lighter blue background */
             border: 1px solid #b3d9ff; /* Soft blue border */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -53,7 +53,7 @@
         .customer-info div {
             margin: 10px 0;
             padding: 10px;
-            background-color: #ffffff; /* White background for individual items */
+            background-color: #97c5db; /* Lighter blue background */
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
         }
@@ -81,7 +81,7 @@
         .records-container {
             margin-top: 20px;
             width: 350px;
-            background-color: #e6f7ff; /* Lighter blue background for the container */
+            background-color: #97c5db; /* Lighter blue background */
             border: 1px solid #b3d9ff; /* Soft blue border */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
