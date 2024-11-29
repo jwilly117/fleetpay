@@ -29,10 +29,10 @@
             border: 1px solid #b3d9ff; /* Soft blue border */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 350px;
+            padding: 10px;
+            width: 90%;
             text-align: left; /* Align content to the left */
-            margin-top: 20px;
+            margin: 20px;
         }
 
         /* Header inside the container */
@@ -47,11 +47,11 @@
 
         /* Customer information styling */
         .customer-info {
-            margin: 20px 0;
+            margin: 20px;
         }
 
         .customer-info div {
-            margin: 10px 0;
+            margin: 20px;
             padding: 10px;
             background-color: #97c5db; /* Lighter blue background */
             border-radius: 5px;
@@ -63,9 +63,9 @@
         }
 
         /* Responsive design for smaller screens */
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .container {
-                width: 90%;
+                width: 100%;
                 padding: 15px;
             }
 
@@ -80,15 +80,15 @@
         /* Record list styling */
         .records-container {
             margin-top: 20px;
-            width: 350px;
+            width: 90%;
             background-color: #97c5db; /* Lighter blue background */
             border: 1px solid #b3d9ff; /* Soft blue border */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 350px;
             text-align: left; /* Align content to the left */
-            margin-top: 20px;
+            margin: 20px;
+            
         }
 
         .record {
@@ -104,4 +104,19 @@
 
         .record:hover {
             background-color: #e0f0ff;
+        }
+
+        #Additional{
+            margin-top: 20px;
+            width: 300px;
+            background-color: #97c5db; /* Lighter blue background */
+            border: 1px solid #b3d9ff; /* Soft blue border */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+            width: 350px;
+            text-align: left; /* Align content to the left */
+            margin: 20px;
+            margin-left: 5px;
+            float: left;
         }
