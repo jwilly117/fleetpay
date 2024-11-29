@@ -7,8 +7,8 @@
             padding: 0;
             display: flex;
             flex-direction: column; /* Stack the header and content */
-            align-items: center;
             height: 100vh;
+
         }
 
         /* Main page header */
@@ -33,6 +33,9 @@
             width: 90%;
             text-align: left; /* Align content to the left */
             margin: 20px;
+            align-items: center;
+            
+
         }
 
         /* Header inside the container */
@@ -119,4 +122,56 @@
             margin: 20px;
             margin-left: 5px;
             float: left;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            background-color: #4281c1; /* Dark blue background */
+            color: white;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            align-items: left;
+
+        }
+
+        .sidebar h2 {
+            margin: 0 0 20px 0;
+            font-size: 1.5rem;
+            text-align: center;
+            color: #ffffff;
+            align-items: left;
+
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: block;
+            font-size: 1rem;
+            background-color: #0056b3; /* Slightly lighter blue for links */
+            align-items: left;
+
+        }
+
+        .sidebar a:hover {
+            background-color: #003366; /* Darker blue on hover */
+            align-items: left;
+
+        }
+
+        /* Main content styling */
+        .content {
+            margin-left: 250px; /* Push content to the right of the sidebar */
+            padding: 20px;
+            flex: 1;
+            background-color: #f0f8ff; /* Light blue background */
+            height: 100vh;
+            overflow-y: auto;
         }
