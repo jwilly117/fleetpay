@@ -105,7 +105,7 @@
         async function fetchAllCustomers() {
             try {
                 // Fetch all records from the server
-                const response = await fetch('http://96.87.240.236:3390/api/lowes');
+                const response = await fetch('http://localhost:3390/api/lowes');
                 const customers = await response.json();
 
                 const recordsContainer = document.getElementById('records-container');
@@ -142,9 +142,8 @@
 
         async function deleteCustomer(customerId) {
             try {
-                const response = await fetch(`http://96.87.240.236:3390/api/delete-customer/${customerId}`, { 
-
-                    method: 'DELETE' 
+                const response = await fetch(`http://localhost:3390/api/delete-customer/${customerId}`, {
+                    method: 'DELETE'
                 });
 
                 if (response.ok) {
@@ -213,7 +212,7 @@
 
 
     <!-- Link to the script to fetch and display data -->
-    <!-- <script src="app.js"></script> -->
+    <script src="app.js"></script>
 </body>
 </html>
 
