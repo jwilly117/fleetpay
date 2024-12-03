@@ -1,5 +1,13 @@
 # 🌐 Fleetpay - Application Development
 
+# Private License
+
+This repository and all its contents are private and proprietary. Unauthorized access, use, reproduction, or distribution of any part of this repository is strictly prohibited. 
+
+Access is granted exclusively to authorized individuals within Ellis Ventures LLC or as otherwise explicitly permitted by Jake Williams / Dwain Ellis. Any attempt to use, copy, modify, or distribute the contents of this repository without prior written consent may result in legal action.
+
+© 2024 Ellis Ventures LLC | Jake Williams . All rights reserved.
+
 
 ![Fleetpay demo login page](/img/fleetpaylogin.png)
 
