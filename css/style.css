@@ -110,7 +110,7 @@
         }
 
         #Additional{
-            margin-top: 20px;
+            margin-top: 0px;
             width: 300px;
             background-color: #97c5db; /* Lighter blue background */
             border: 1px solid #b3d9ff; /* Soft blue border */
@@ -119,7 +119,7 @@
 
             width: 350px;
             text-align: left; /* Align content to the left */
-            margin: 20px;
+            margin: 0px;
             margin-left: 5px;
             float: left;
         }
@@ -174,4 +174,8 @@
             background-color: #f0f8ff; /* Light blue background */
             height: 100vh;
             overflow-y: auto;
+        }
+
+        .mt-5 {
+            margin-top: 2rem !important;
         }
