@@ -30,7 +30,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 10px;
-            width: 90%;
+            width: 95%;
             text-align: left; /* Align content to the left */
             margin: 20px;
             align-items: center;
@@ -83,7 +83,7 @@
         /* Record list styling */
         .records-container {
             margin-top: 20px;
-            width: 90%;
+            width: 100%;
             background-color: #97c5db; /* Lighter blue background */
             border: 1px solid #b3d9ff; /* Soft blue border */
             border-radius: 10px;
@@ -124,47 +124,6 @@
             float: left;
         }
 
-        /* Sidebar styling */
-        .sidebar {
-            width: 250px;
-            background-color: #4281c1; /* Dark blue background */
-            color: white;
-            height: 100vh;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            align-items: left;
-
-        }
-
-        .sidebar h2 {
-            margin: 0 0 20px 0;
-            font-size: 1.5rem;
-            text-align: center;
-            color: #ffffff;
-            align-items: left;
-
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: white;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            display: block;
-            font-size: 1rem;
-            background-color: #0056b3; /* Slightly lighter blue for links */
-            align-items: left;
-
-        }
-
-        .sidebar a:hover {
-            background-color: #003366; /* Darker blue on hover */
-            align-items: left;
-
-        }
 
         /* Main content styling */
         .content {
@@ -179,3 +138,54 @@
         .mt-5 {
             margin-top: 2rem !important;
         }
+        
+
+        .sidebar {
+            width: 250px;
+            background-color: #3976b3;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            justify-content: space-between; /* Pushes bottom section down */
+        }
+        
+        .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .sidebar a {
+            display: block;
+            width: 100%;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            text-align: left;
+        }
+        .sidebar a:hover {
+            background-color: #1c5a93;
+        }
+        
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 10px;
+        }
+        .user-panel i {
+            color: rgb(255, 255, 255);
+        }
+        
+        .user-panel .fas.fa-cog,
+        .user-panel .fas.fa-sign-out-alt {
+            font-size: 1.4em;
+        }
+        

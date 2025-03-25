@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Payment Requests</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+  <script>
+    async function fetchRecords() {
+      try {
+        const response = await fetch('http://localhost:3000/payment-requests');
+        if (response.ok) {
+          const records = await response.json();
+          const tableBody = document.getElementById('records-body');
+
+          // Clear existing rows
+          tableBody.innerHTML = '';
+
+          // Populate the table with records
+          records.forEach(record => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${record.userGuid}</td>
+              <td>${record.userName}</td>
+              <td>${record.userEmail}</td>
+              <td>${record.requestDate}</td>
+              <td>${record.totalLabor}</td>
+              <td>${record.payoutLabor}</td>
+              <td>${record.payoutFee}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } else {
+          alert('Failed to fetch records.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred while fetching the records.');
+      }
+    }
+
+    // Fetch records when the page loads
+    window.onload = fetchRecords;
+    
+  </script>
+</head>
+<body>
+  <h1>Payment Requests</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>User GUID</th>
+        <th>User Name</th>
+        <th>User Email</th>
+        <th>Request Date</th>
+        <th>Total Labor</th>
+        <th>Payout Labor</th>
+        <th>Payout Fee</th>
+      </tr>
+    </thead>
+    <tbody id="records-body">
+      <!-- Records will be dynamically added here -->
+    </tbody>
+  </table>
+</body>
+</html>
