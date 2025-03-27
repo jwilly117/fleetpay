@@ -351,7 +351,7 @@ app.post('/Requests/approve/:id', async (req, res) => {
     // Send email to user
     const mailOptions = {
       from: 'FleetPay Notifications <your_email@gmail.com>',
-      to: "jakewilliams117@gmail.com", // assuming this is the email
+      to: "ryan@ellis-ventures.com", // assuming this is the email
       subject: '✅ Your FleetPay Payment Request Has Been Approved',
       text: `Hello,
     

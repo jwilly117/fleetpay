@@ -134,6 +134,10 @@
       transform: translateY(0);
     }
   </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 </head>
 <body>
 
@@ -281,11 +285,52 @@
   </div>
               
               </div>
+              <hr>
+              <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 p-3">
+                
+                <!-- Total RDA - Current Payroll -->
+<div class="col-lg-6">
+  <div class="card text-white bg-secondary shadow rounded-3 h-100">
+    <div class="card-body text-center">
+      <h5 class="card-title">Total RDA – Current Payroll</h5>
+      <h2 id="currentRDA">$0.00</h2>
+    </div>
+  </div>
+</div>
+
+<!-- Total FP Keep - Current Payroll -->
+<div class="col-lg-6">
+  <div class="card text-white bg-dark shadow rounded-3 h-100">
+    <div class="card-body text-center">
+      <h5 class="card-title">Total FP Keep – Current Payroll</h5>
+      <h2 id="currentKeep">$0.00</h2>
+    </div>
+  </div>
+</div>
+
+
               
+              </div>
+
+              
+<hr>
+<br><br>  
+
+  <div class="col-lg-12">
+    <div class="card shadow rounded-6">
+      <div class="card-body">
+        <h4 class="card-title text-center text-primary">Revenue – Last 7 Days</h4>
+        <canvas id="revenueChart" height="50"></canvas>
+      </div>
+    </div>
+  </div>
+
 
             <!-- End Cards -->
 
             <br><br><br>
+        </div>
+        
 </body>
 
 <script>
@@ -316,55 +361,23 @@
   
     document.addEventListener('DOMContentLoaded', loadDashboardStats);
   </script>
-  
+      <div id="myfooter">
+
+        <br>
+        <div class="text-center">
+          <hr style="color: white; width: 70%; margin-left: 300px; align-content: center;">
+        </div>
+        <div class="text-center" style="font-size: large; color: rgb(192, 191, 191); font-weight: bold;">Fleetpay.cash — A GenX Company — Ellis Ventures 2025 ~ JW</div>
+        <br><br>
+        
+      </div>
 
         </div>
     
         <hr>
+        
         <br><br><br>
     
-        <!-- Modal -->
-        <div class="modal fade" id="googleModal" tabindex="-1" aria-labelledby="googleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="googleModalLabel">Payroll Exclusions</h5>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Please review your amount before submitting a payment request. We will review and send you correspondance on your deposit to your email account shortly. 
-                        <hr>
-                        <div class="mb-3">
-                            <label for="modalPercentageField" class="form-label" style="font-weight:bold;">Your Deposit Amount:</label>
-                            <input type="text" style="font-weight: bold; text-align: center;" id="modalPercentageField" class="form-control glow-input" readonly>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="approveButton" data-bs-dismiss="modal" onclick="insertTestRecord()">Submit Request</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-    
-         <!-- Toast -->
-         <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="successToast" class="toast align-items-center toast-light-blue border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <strong>✅ Request Submitted Successfully</strong>
-                        <hr>
-                        Receipt will be emailed with all information
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    
-        </div>
-
 
 
     </div>
@@ -372,7 +385,55 @@
 
     <!-- TEST SCRIPT TO INSERT RECORD INTO REQUESTS TABLE -->
 
-
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+    
+        const revenueChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: getLast7Days(),
+            datasets: [{
+              label: 'Revenue',
+              data: [3200, 2700, 3900, 4500, 2200, 5100, 4800], // ← Placeholder $
+              backgroundColor: 'rgba(54, 162, 235, 0.7)',
+              borderRadius: 6,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `$${ctx.raw.toLocaleString()}`
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: value => `$${value}`
+                }
+              }
+            }
+          }
+        });
+    
+        function getLast7Days() {
+          const days = [];
+          const today = new Date();
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(today.getDate() - i);
+            days.push(d.toLocaleDateString('en-US', { weekday: 'short' }));
+          }
+          return days;
+        }
+      });
+    </script>
+    
 
 
     
