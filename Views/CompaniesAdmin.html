@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Information</title>
+    <title>Company Management 📋</title>
 
     <!-- Placeholder link to React / Bootstrap -->
 
@@ -144,82 +144,293 @@
 
     
     <br><br>
+    <!-- Toggle Button -->
+    <button id="toggleSidebar" class="btn btn-secondary" style="position: fixed; top: 20px; left: 20px; z-index: 999; background-color: #0e6170;">
+        <i class="fas fa-bars"></i>
+    </button>
+  
 
     <!-- Sidebar -->
-    <div class="sidebar" style="margin-top: 125px;">
-        <h2>Menu</h2>
-        <a href="Dashboard.html" style="text-align: center;"><strong>Dashboard</strong></a>
-        <hr>
+    <!-- Font Awesome CDN for icons (add in <head> if not already included) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        <a href="CreateRequest.html">Create Request</a>
-        <a href="ReviewRequest.html">Review Requests</a>
-        <a href="CompaniesAdmin.html" style="background-color: #035b6a;">Company Management</a>
-        <a href="UsersAdmin.html">User Management</a>
-        <a href="Payrollexclude.html">Payroll Exclusions</a>
-        <a href="ArchiveRecords.html">Payout Records</a>
-        <a href="#link5">Settings</a>
+        <div class="sidebar" id="sidebar">
+
+            <div class="sidebar-content">
+              <br><br>
+
+              <h3 class="section-header " style="text-align: center; text-decoration: wavy;">Main Menu</h3><br>
+              <a href="Dashboard.html" style="text-align: center; background-color: #416682;"><strong>💸 My Dashboard</strong></a>
+              <hr  class="section-header">
+
+
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Requests</h6>
+                <a href="CreateRequest.html">🔸Create Request</a>
+                <a href="ReviewRequest.html">🔸Review Requests</a>
+                <a href="ReportIssue.html">🔸Help or Report Issue</a>
+
+
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Management</h6>
+              <a href="CompaniesAdmin.html" style="background-color: #035b6a;">🔸Company Admin</a>
+              <a href="UsersAdmin.html">🔸User Admin</a>
+              <a href="BankLinking.html">🔸Banking Admin</a>
+              
+
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Financial Records</h6>
+              <a href="Payrollexclude.html">🔸Payroll Exclusions</a>
+              <a href="ArchiveRecords.html">🔸Payout Archives</a>
+              <a href="settings.html">🔸Settings</a>
+              <a href="contact.html">🔸Contact Us</a>
+
+            </div>
+          
+            <!-- Moved to bottom -->
+            <div class="user-panel">
+              <i class="fas fa-user-circle fa-2x me-2"></i>
+              
+            <div class="user-info">
+                <div><strong>Jake W.</strong></div>
+                <div style="font-size: 0.85em;">
+                    <i class="fas fa-badge-check" style="color: limegreen;"></i> Verified
+                  </div>
+                </div>
+
+            <div class="user-actions">
+                <i class="fas fa-cog mx-2" title="Settings"></i>
+                <i class="fas fa-sign-out-alt" title="Logout" onclick="logoutUser()" style="cursor: pointer;"></i>
+            </div>
+            </div>
+
+          </div>
+
+          <div style="margin-left: 300px;">
+            <h2 style="color: rgb(187, 187, 187);">Create a New Company or Subcontractor Group</h2>
+            <p style="color: white;">Current Fleetpay Instance: <span style="color: rgb(107, 251, 189); font-weight: bold;">SUDO</span></p>
+            <hr style="color: white; width: 85%;">
+            <p style="color: white; width: 80%;">Please note that a company must be created before its respective users can be created, even in the case of single person sole proprietorships. Direct Company employees can be added underneath the highest parent in a group. Example: Incredible Installations would be the parent company for Luke Grant. </p>
+            <p style="color: white; width: 80%;">For more information and FAQ, please visit our <a href="ReportIssue.html" style="color: rgb(188, 171, 240);">Help Page</a>
+        </div>
+
+
+      <!-- Create a company form -->
+      <div class="container mt-5" style="width: 70%; 
+      margin-left: 300px; align-items: center;">
+        <div class="card shadow rounded-4">
+          <div class="card-body" style="background-color: #e2eeff;">
+            <!-- <h3 class="card-title mb-4 text-center text-primary">Register a New Company</h3> -->
+             <br>
+      
+            <form id="addCompanyForm">
+              <div class="mb-3">
+                <label for="companyName" class="form-label">Company Name</label>
+                <input type="text" class="form-control" id="companyName" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="primaryContact" class="form-label">Primary Contact Name</label>
+                <input type="text" class="form-control" id="primaryContact" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="primaryID" class="form-label">Primary Contact User ID</label>
+                <input type="number" class="form-control" id="primaryID" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="paymentInterval" class="form-label">Payment Interval</label>
+                <select class="form-select" id="paymentInterval" required>
+                  <option value="">Choose...</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Biweekly">Biweekly</option>
+                  <option value="Monthly">Monthly</option>
+                </select>
+              </div>
+      
+              <div class="mb-3">
+                <label for="companyEmail" class="form-label">Company Email</label>
+                <input type="email" class="form-control" id="companyEmail" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="companyPhone" class="form-label">Company Phone</label>
+                <input type="tel" class="form-control" id="companyPhone">
+              </div>
+      
+              <div class="mb-3">
+                <label for="status" class="form-label">Company Status</label>
+                <select class="form-select" id="status" required>
+                  <option value="">Choose...</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="Onboarding">Onboarding</option>
+                  <option value="Terminated">Terminated</option>
+                  <option value="Prospect">Prospect</option>
+                  <option value="Under Review">Under Review</option>
+                </select>
+              </div>
+      
+              <div class="form-check mb-3">
+                <input class="form-check-input pulse-border" type="checkbox" id="twoFactor">
+                <label class="form-check-label" for="consentCheckbox">
+                  Two-Factor Authentication Required
+                </label>
+              </div>
+      
+              <div class="mb-4">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea class="form-control" id="notes" rows="3"></textarea>
+              </div>
+      
+              <div class="d-grid">
+                <button type="submit" class="btn btn-secondary btn-lg">Add Company</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      
+
+
+    </div>
+
+    <!-- Current Companies table -->
+    <div class="container mt-5" style="width: 70%; 
+      margin-left: 300px; align-items: center;">
+      <div class="card shadow rounded-4">
+        <div class="card-body" style="background-color: #e2eeff;">
+          <h3 class="card-title mb-4 text-center text-primary">All Companies & Sub Groups</h3>
+          <p class="text-center" style="color: rgb(43, 43, 43);">Current Instance: <span style="color: rgb(29, 26, 112); font-weight: bold;">SUDO / All</span></p>
+
+
+    
+          <div id="companyList" class="row g-4">
+            <!-- Company cards will be injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="myfooter">
+
+      <br>
+      <div class="text-center">
+        <hr style="color: white; width: 70%; margin-left: 300px; align-content: center;">
+      </div>
+      <div class="text-center" style="font-size: large; color: rgb(192, 191, 191); font-weight: bold;">Fleetpay.cash — A GenX Company — Ellis Ventures 2025 ~ JW</div>
+      <br><br>
+      
     </div>
 
 
-    <div class="container" id="maincontain" style="background-color: rgb(78, 108, 135); width: 80%; margin-left: 355px; align-items: center;">
-        <div class="row">
-
-
-        <div class="container mt-5">
-            <h1>Payment Requests</h1>
-            <hr>
-  <table>
-    <thead>
-      <tr>
-        <th>User GUID</th>
-        <th>User Name</th>
-        <th>User Email</th>
-        <th>Request Date</th>
-        <th>Total Labor</th>
-        <th>Payout Labor</th>
-        <th>Payout Fee</th>
-        <th>Approve</th>
-        <th>Action</th>
-
-      </tr>
-    </thead>
-    <tbody id="records-body">
-      <!-- Records will be dynamically added here -->
-    </tbody>
-  </table>
-
-  <hr>
-  </div>
-</div>
-
-
-    <div class="row">
-
-      <div class="container mt-5">
-          <h1>Jobs in Selected Request Record</h1>
-          <h6>Excluded from main Payroll due to successful Fleetpay payout</h6>
-          <hr>
-          <div class="card">
-              <div class="card-body">
-                  <button class="btn btn-primary mb-3" id="fetchDataButton">Fetch Data</button>
-                  <table class="table table-bordered table-striped tr.visible">
-                      <thead>
-                          <tr>
-                              <th>Request ID</th>
-                              <th>Project Number</th>
-                              <th>Customer Name</th>
-                              <th>Install Date</th>
-                              <th>Total Labor</th>
-                              <th>Status</th>
-                              <th>Job Link</th>
-                          </tr>
-                      </thead>
-                      <tbody id="tableBody"></tbody>
-                  </table>
-              </div>
-          </div>
+<!-- <footer class="footer mt-5 py-3 text-center" style="margin-left: 250px; width: 80%;">
+      <div class="container text-center">
+        <small>Fleetpay.cash — A GenX Company — Ellis Ventures 2025 ~ JW</small>
       </div>
-  </div>
+    </footer> -->
+    
+    <!-- Script to adjust footer based on sidebar -->
+    <script>
+function adjustFooterMargin() {
+  const isCollapsed = sidebar.classList.contains('collapsed');
+  footer.style.marginLeft = isCollapsed ? '80px' : '250px';
+}
+    </script>
 
+    <script>
+      async function loadCompanyList() {
+        try {
+          const response = await fetch('http://localhost:3000/Companies');
+          if (!response.ok) throw new Error("Failed to fetch companies.");
+    
+          const companies = await response.json();
+          const listContainer = document.getElementById('companyList');
+          listContainer.innerHTML = '';
+    
+          companies.forEach(company => {
+            const col = document.createElement('div');
+            col.className = 'col-md-6';
+    
+            col.innerHTML = `
+              <div class="border rounded p-3 bg-light shadow-sm">
+                <h5 class="text-dark">${company.CompanyName}</h5>
+                <p class="mb-1"><strong>Contact:</strong> ${company.PrimaryContact}</p>
+                <p class="mb-1"><strong>Email:</strong> ${company.CompanyEmail}</p>
+                <p class="mb-1"><strong>Phone:</strong> ${company.CompanyPhone || 'N/A'}</p>
+                <p class="mb-1"><strong>Status:</strong> ${company.Status}</p>
+                <p class="mb-1"><strong>Payment:</strong> ${company.PaymentInterval}</p>
+              </div>
+            `;
+    
+            listContainer.appendChild(col);
+          });
+    
+        } catch (err) {
+          console.error('Error loading companies:', err);
+        }
+      }
+    
+      // Load companies on page load
+      document.addEventListener('DOMContentLoaded', loadCompanyList);
+    </script>
+    
+    
 
-  </div>
+      <!-- Javascript to toggle sidebar -->
+      <script>
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('collapsed');
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        adjustFooterMargin(isCollapsed);
+        });
+    </script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('addCompanyForm');
+  
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+  
+        const companyData = {
+          companyName: document.getElementById("companyName").value,
+          primaryContact: document.getElementById("primaryContact").value,
+          primaryID: parseInt(document.getElementById("primaryID").value),
+          paymentInterval: document.getElementById("paymentInterval").value,
+          companyEmail: document.getElementById("companyEmail").value,
+          companyPhone: document.getElementById("companyPhone").value,
+          status: document.getElementById("status").value,
+          twoFactor: document.getElementById("twoFactor").checked,
+          notes: document.getElementById("notes").value
+        };
+  
+        try {
+          const response = await fetch('http://localhost:3000/Companies', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(companyData)
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to add company');
+          }
+  
+          const result = await response.json();
+          alert(result.message);
+          form.reset();
+  
+          // 👇 Refresh the company list display
+          loadCompanyList();
+  
+        } catch (error) {
+          console.error('❌ Error:', error);
+          alert('There was an error creating the company.');
+        }
+      });
+    });
+  </script>
+  
+
+</body>

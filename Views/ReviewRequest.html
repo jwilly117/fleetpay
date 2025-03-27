@@ -145,32 +145,40 @@
     
     <br><br>
 
+    <br><br>
+    <!-- Toggle Button -->
+    <button id="toggleSidebar" class="btn btn-secondary" style="position: fixed; top: 20px; left: 20px; z-index: 999; background-color: #0e6170;">
+        <i class="fas fa-bars"></i>
+    </button>
+  
+
     <!-- Sidebar -->
     <!-- Font Awesome CDN for icons (add in <head> if not already included) -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        <div class="sidebar">
+        <div class="sidebar"  id="sidebar">
+            
             <div class="sidebar-content">
-              <br>
-              <h3 style="text-align: center; text-decoration: wavy;">Main Menu</h3><br>
-              <a href="Dashboard.html" style="text-align: center; background-color: #416682;"><strong>💸 My Dashboard</strong></a>
-              <hr>
-              <h6 style="color: lightgray; font-weight: bolder;">Requests</h6>
-
+                <br><br>
+                <h3 class="section-header" style="text-align: center; text-decoration: wavy;">Main Menu</h3><br>
+                <a href="Dashboard.html" style="text-align: center; background-color: #416682;"><strong>💸 My Dashboard</strong></a>
+                <hr  class="section-header">
+                <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Requests</h6>
               <a href="CreateRequest.html">🔸Create Request</a>
               <a href="ReviewRequest.html"  style="background-color: #035b6a;">🔸Review Requests</a>
-              <a href="CreateRequest.html">🔸Help or Report Issue</a>
+              <a href="ReportIssue.html">🔸Help or Report Issue</a>
 
-              <h6 style="color: lightgray; font-weight: bolder;">Management</h6>
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Management</h6>
 
               <a href="CompaniesAdmin.html">🔸Company Admin</a>
-              <a href="UsersAdmin.html">🔸User Management</a>
-              <h6 style="color: lightgray; font-weight: bolder;">Financial Records</h6>
+              <a href="UsersAdmin.html">🔸User Admin</a>
+              <a href="BankLinking.html">🔸Banking Admin</a>
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Financial Records</h6>
 
               <a href="Payrollexclude.html">🔸Payroll Exclusions</a>
               <a href="ArchiveRecords.html">🔸Payout Archives</a>
-              <a href="#link5">🔸Settings</a>
-              <a href="#link5">🔸Contact Us</a>
+              <a href="settings.html">🔸Settings</a>
+              <a href="contact.html">🔸Contact Us</a>
 
             </div>
           
@@ -191,15 +199,23 @@
           </div>
           
 
+          <div style="margin-left: 300px;">
+            <h2 style="color: rgb(187, 187, 187);">Create a New Company or Subcontractor Group</h2>
+            <p style="color: white;">Current Fleetpay Instance: <span style="color: rgb(107, 251, 189); font-weight: bold;">SUDO</span></p>
+            <hr style="color: white; width: 85%;">
+            <p style="color: white; width: 80%;">Please note that a company must be created before its respective users can be created, even in the case of single person sole proprietorships. Direct Company employees can be added underneath the highest parent in a group. Example: Incredible Installations would be the parent company for Luke Grant. </p>
+            <p style="color: white; width: 80%;">For more information and FAQ, please visit our <a href="ReportIssue.html" style="color: rgb(188, 171, 240);">Help Page</a>
+        </div>
+
 
     <div class="container" id="maincontain" 
-    style="background-color: rgb(78, 108, 135); width: 100%; 
+    style="background-color: 97c5db; width: 75%; 
       margin-left: 300px; align-items: center;">
 
         <div class="row">
 
 
-        <div class="container mt-5">
+        <div class="container mt-5" style="background-color: #e2eeff;">
             <h1>Payment Requests</h1>
             <hr>
 
@@ -223,9 +239,6 @@
                 </tbody>
               </table>
               
-
-
-
   <hr>
   </div>
 </div>
@@ -233,9 +246,9 @@
 
     <div class="row">
 
-      <div class="container mt-5">
-          <h1>Jobs in Selected Request Record</h1>
-          <h6>Excluded from main Payroll due to successful Fleetpay payout</h6>
+      <div class="container mt-5" style="background-color: #e2eeff;">
+          <h1>Jobs in Selected Request Record</h1><br>
+          <h6>ℹ️ Please note: Once these jobs have been approved, they will be removed from the normal payroll process immediately.</h6>
           <hr>
           <div class="card">
               <div class="card-body">
@@ -249,7 +262,7 @@
                               <th>Install Date</th>
                               <th>Total Labor</th>
                               <th>Status</th>
-                              <th>Job Link</th>
+                              <th>Source CRM</th>
                           </tr>
                       </thead>
                       <tbody id="tableBody"></tbody>
@@ -260,6 +273,16 @@
   </div>
 
 
+  </div>
+  <div id="myfooter">
+
+    <br>
+    <div class="text-center">
+      <hr style="color: white; width: 70%; margin-left: 300px; align-content: center;">
+    </div>
+    <div class="text-center" style="font-size: large; color: rgb(192, 191, 191); font-weight: bold;">Fleetpay.cash — A GenX Company — Ellis Ventures 2025 ~ JW</div>
+    <br><br>
+    
   </div>
 </body>
 
@@ -346,10 +369,7 @@
 
 
 
-    </div>
-    <div>
-      <br><a href="insert.html" style="color: white;">Go to Insert Page</a>
-    </div>
+
 
 
     <script src="/javascript/request.js"></script>
@@ -363,6 +383,17 @@
               setInterval(fetchRequests, 10000); // Refresh every 5 seconds
       };
     </script>
+
+
+
+    <!-- Javascript to toggle sidebar -->
+    <script>
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('collapsed');
+        });
+    </script>
+  
 
 
 </body>

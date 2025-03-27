@@ -171,6 +171,36 @@
         updateTotals(); // Update totals when no rows are selected
     });
 
+    async function loadJobsForRequest(requestID) {
+        try {
+          const response = await fetch(`http://localhost:3000/JobsTemp/by-request/${requestID}`);
+          if (!response.ok) throw new Error("Failed to load jobs");
+      
+          const jobs = await response.json();
+          const tableBody = document.getElementById('tableBody');
+          tableBody.innerHTML = ''; // Clear any previous rows
+      
+          jobs.forEach(job => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${job.RequestID}</td>
+              <td>${job.ProjectNumber}</td>
+              <td>${job.CustomerName}</td>
+              <td>${job.InstallCompleteDate ? new Date(job.InstallCompleteDate).toLocaleDateString() : ''}</td>
+              <td>$${job.TotalLabor.toFixed(2)}</td>
+              <td>${job.PaidExcludeFromPayroll ? 'Excluded' : 'Included'}</td>
+              <td class="text-center"><a style="font-weight: bold;" href="${job.Hyperlink}" target="_blank">View PO ➡️ </a></td>
+            `;
+
+            tableBody.appendChild(row);
+          });
+        } catch (err) {
+          console.error("❌ Error fetching jobs:", err);
+          alert("Unable to load jobs for this request.");
+        }
+      }
+      
+
 
     // Function to fetch records
     // async function fetchRequests() {
@@ -309,16 +339,6 @@
             return;
         }
    
-        //   const OLDtestData = {
-        //     userGuid: "test-insaerting",
-        //     userName: "Denise Richards",
-        //     userEmail: "denise.richards@gmail.com",
-        //     requestDate: currentDateTime,
-        //     totalLabor: totalLabor,
-        //     payoutLabor: payoutAmount,
-        //     payoutFee: feeAmountCurrency
-        //   };
-
           const testData = {
             requestTotal: totalLaborNumber,
             fpPercentage: 10.5,
@@ -342,7 +362,38 @@
     
             if (response.ok) {
               const result = await response.json();
-            //   alert(result.message || "Test record inserted successfully!");
+              const requestID = result.requestID || result.RequestID;
+
+            // 🧠 Loop through selected job rows and insert each into JobsTemp
+            const selectedRows = document.querySelectorAll('#tableBody tr.table-active');
+
+            for (let row of selectedRows) {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 6) {
+                const jobData = {
+                    projectNumber: cells[0].textContent,
+                    customerName: cells[1].textContent,
+                    installCompleteDate: cells[2].textContent,
+                    totalLabor: parseCurrency(cells[3].textContent),
+                    hyperlink: cells[5]?.querySelector('a')?.href || null,
+                    paidExcludeFromPayroll: false, // default; could be toggled if needed
+                    requestID: requestID
+                };
+
+                // 🔄 Send to backend
+                await fetch('http://localhost:3000/JobsTemp', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jobData)
+                });
+                }
+            }
+              
+
+
+              
             // Show the toast
             const toast = new bootstrap.Toast(document.getElementById('successToast'));
             toast.show();
@@ -389,8 +440,27 @@
                 <td>${record.FPAmount?.toFixed(2) || '0.00'}</td>
                 <td>${record.FPPercentage?.toFixed(2) + '%' || '0%'}</td>
                 <td><button class="approve-btn" onclick="approveRecord(${record.RequestID})">Approve</button></td>
-                <td><button onclick="deleteRecord(${record.RequestID})">Delete</button></td>
+                <td><button class="deny-btn" onclick="deleteRecord(${record.RequestID})">Deny</button></td>
             `;
+
+                    // 👇 Add click event to load jobs tied to this request
+                row.addEventListener('click', () => {
+
+
+    // Remove previous highlight
+    document.querySelectorAll('#records-body tr').forEach(r => {
+      r.classList.remove('selected-request');
+    });
+
+    // Highlight the clicked row
+    row.classList.add('selected-request');
+
+    // Load jobs for the selected request
+
+
+                    loadJobsForRequest(record.RequestID);
+                });
+
             tableBody.appendChild(row);
     
             // Optional animation delay
@@ -409,8 +479,26 @@
         }
     }
   
-    
+    async function approveRecord(requestID) {
 
+      try {
+        const response = await fetch(`http://localhost:3000/Requests/approve/${requestID}`, {
+          method: 'POST'
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          alert(data.message);
+          fetchRequests(); // Reload the table to reflect new status
+        } else {
+          alert("Failed to approve request.");
+        }
+      } catch (err) {
+        console.error('❌ Error approving request:', err);
+        alert("An error occurred during approval.");
+      }
+    }
+    
 
 
 // 

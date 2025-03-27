@@ -1,18 +1,18 @@
 const axios = require('axios');
 
-const testData = {
-  requestTotal: 1200.50,
-  fpPercentage: 10.5,
-  fpAmount: 126.05,
-  status: "Pending",
-  approvedBy: "manager@example.com",
-  payoutDate: "2025-03-25T10:00:00Z",
-  user: "johndoe",
-  requestDate: "2025-03-25T09:00:00Z",
-  notes: "Urgent payout"
+const companyPayload = {
+  companyName: "Acme Inc",
+  primaryContact: "Jane Doe",
+  primaryID: 2,
+  paymentInterval: "Biweekly",
+  companyEmail: "contact@acme.com",
+  companyPhone: "555-123-4567",
+  status: "Active",
+  twoFactor: true,
+  notes: "Preferred payout on Fridays"
 };
 
-axios.post('http://localhost:3000/Requests', testData)
+axios.post('http://localhost:3000/Companies', companyPayload)
   .then(response => {
     console.log('✅ Success:', response.data);
   })

@@ -3,8 +3,16 @@ const express = require('express');
 const sql = require('mssql');
 const cors = require('cors'); // Import cors middleware
 const bodyParser = require('body-parser'); // Middleware to parse JSON bodies
+const nodemailer = require('nodemailer');
 
-
+// Configure your email transport
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'jake@ellis-ventures.com',
+    pass: 'zcdi zrtm ffma tlkm' // Use App Password or secure token
+  }
+});
 
 
 // Initialize Express app
@@ -40,7 +48,6 @@ app.use(express.json());
 
 // POST endpoint to insert data into dbo.Requests
 app.post('/Requests', async (req, res) => {
-
   const {
     requestTotal,
     fpPercentage,
@@ -53,20 +60,11 @@ app.post('/Requests', async (req, res) => {
     notes
   } = req.body;
 
-
   try {
-    // Connect to the database
-    let pool = await sql.connect(config);
+    const pool = await sql.connect(config);
 
-    // SQL query for the updated Requests table
-    const query = `
-      INSERT INTO dbo.Requests 
-      (RequestTotal, FPPercentage, FPAmount, Status, ApprovedBy, PayoutDate, UserID, RequestDate, Notes)
-      VALUES (@requestTotal, @fpPercentage, @fpAmount, @status, @approvedBy, @payoutDate, @user, @requestDate, @notes)
-    `;
-
-    // Execute the query with inputs mapped to new fields
-    await pool.request()
+    // SQL query with OUTPUT to get inserted RequestID
+    const result = await pool.request()
       .input('requestTotal', sql.Decimal(18, 2), requestTotal)
       .input('fpPercentage', sql.Decimal(5, 2), fpPercentage)
       .input('fpAmount', sql.Decimal(18, 2), fpAmount)
@@ -76,14 +74,31 @@ app.post('/Requests', async (req, res) => {
       .input('user', sql.NVarChar(255), user)
       .input('requestDate', sql.DateTime, requestDate)
       .input('notes', sql.NVarChar(sql.MAX), notes)
-      .query(query);
+      .query(`
+        INSERT INTO dbo.Requests (
+          RequestTotal, FPPercentage, FPAmount,
+          Status, ApprovedBy, PayoutDate,
+          UserID, RequestDate, Notes
+        )
+        OUTPUT INSERTED.RequestID
+        VALUES (
+          @requestTotal, @fpPercentage, @fpAmount,
+          @status, @approvedBy, @payoutDate,
+          @user, @requestDate, @notes
+        )
+      `);
 
-    res.status(201).send({ message: 'Payment request added successfully!' });
-    console.log("Post Success - 200")
+    const requestId = result.recordset[0].RequestID;
+
+    res.status(201).send({
+      message: '✅ Payment request added successfully!',
+      requestID: requestId
+    });
+
+    console.log("✅ POST /Requests successful. RequestID:", requestId);
   } catch (error) {
-    console.error(error);
+    console.error('❌ Error in POST /Requests:', error);
     res.status(500).send({ error: 'An error occurred while adding the payment request.' });
-  } finally {
   }
 });
 
@@ -116,10 +131,249 @@ app.get('/Requests', async (req, res) => {
 });
 
 
+app.post('/Companies', async (req, res) => {
+  const {
+    companyName,
+    primaryContact,
+    primaryID,
+    paymentInterval,
+    companyEmail,
+    companyPhone,
+    status,
+    twoFactor,
+    notes
+  } = req.body;
+
+  try {
+    const pool = await sql.connect(config);
+
+    await pool.request()
+      .input('CompanyName', sql.NVarChar(255), companyName)
+      .input('PrimaryContact', sql.NVarChar(255), primaryContact)
+      .input('PrimaryID', sql.Int, primaryID)
+      .input('PaymentInterval', sql.NVarChar(50), paymentInterval)
+      .input('CompanyEmail', sql.NVarChar(255), companyEmail)
+      .input('CompanyPhone', sql.NVarChar(50), companyPhone)
+      .input('Status', sql.NVarChar(50), status)
+      .input('TwoFactorEnabled', sql.Bit, twoFactor)
+      .input('Notes', sql.NVarChar(sql.MAX), notes)
+      .query(`
+        INSERT INTO Companies (
+          CompanyName, PrimaryContact, PrimaryID, PaymentInterval,
+          CompanyEmail, CompanyPhone, Status, TwoFactorEnabled, Notes
+        ) VALUES (
+          @CompanyName, @PrimaryContact, @PrimaryID, @PaymentInterval,
+          @CompanyEmail, @CompanyPhone, @Status, @TwoFactorEnabled, @Notes
+        )
+      `);
+
+    res.status(201).json({ message: '✅ Company successfully created!' });
+  } catch (error) {
+    console.error('❌ Error creating company:', error);
+    res.status(500).json({ error: 'An error occurred while creating the company.' });
+  }
+});
 
 
+app.get('/Companies', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().query(`
+      SELECT CompanyID, CompanyName 
+      FROM Companies
+      ORDER BY CompanyName
+    `);
+    res.status(200).json(result.recordset);
+  } catch (error) {
+    console.error('Error fetching companies:', error);
+    res.status(500).json({ error: 'An error occurred while fetching companies.' });
+  }
+});
 
 
+app.post('/Users', async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    role,
+    password,
+    employerID,
+    twoFactor,
+    bankAdded
+  } = req.body;
+
+  try {
+    const pool = await sql.connect(config);
+
+    await pool.request()
+      .input('FirstName', sql.NVarChar(50), firstName)
+      .input('LastName', sql.NVarChar(50), lastName)
+      .input('EmailAddress', sql.NVarChar(255), email)
+      .input('PhoneNumber', sql.NVarChar(20), phone)
+      .input('Role', sql.NVarChar(50), role)
+      .input('PasswordHash', sql.NVarChar(255), password) // Ideally, hash this first!
+      .input('EmployerID', sql.Int, employerID)
+      .input('TwoFactorEnabled', sql.Bit, twoFactor)
+      .input('BankAccountAdded', sql.Bit, bankAdded)
+      .input('Status', sql.NVarChar(20), 'Active') // Default status
+      .input('LastLogin', sql.DateTime, null)
+      .input('Notes', sql.NVarChar(sql.MAX), null)
+      .query(`
+        INSERT INTO Users (
+          FirstName, LastName, EmailAddress, PhoneNumber, Role, 
+          PasswordHash, EmployerID, TwoFactorEnabled, BankAccountAdded,
+          Status, LastLogin, Notes
+        ) VALUES (
+          @FirstName, @LastName, @EmailAddress, @PhoneNumber, @Role,
+          @PasswordHash, @EmployerID, @TwoFactorEnabled, @BankAccountAdded,
+          @Status, @LastLogin, @Notes
+        )
+      `);
+
+    res.status(201).json({ message: '✅ User successfully created!' });
+  } catch (error) {
+    console.error('❌ Error creating user:', error);
+    res.status(500).json({ error: 'An error occurred while creating the user.' });
+  }
+});
+
+
+app.get('/Users', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().query(`
+      SELECT 
+        IDNumber,
+        FirstName,
+        LastName,
+        EmailAddress,
+        PhoneNumber,
+        Role,
+        TwoFactorEnabled,
+        Status
+      FROM Users
+      ORDER BY LastName, FirstName
+    `);
+
+    res.status(200).json(result.recordset);
+  } catch (error) {
+    console.error('❌ Error fetching users:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving users.' });
+  }
+});
+
+
+app.post('/JobsTemp', async (req, res) => {
+  const {
+    projectNumber,
+    customerName,
+    installCompleteDate,
+    totalLabor,
+    hyperlink,
+    paidExcludeFromPayroll,
+    requestID
+  } = req.body;
+
+  try {
+    const pool = await sql.connect(config);
+
+    await pool.request()
+      .input('ProjectNumber', sql.NVarChar(50), projectNumber)
+      .input('CustomerName', sql.NVarChar(255), customerName)
+      .input('InstallCompleteDate', sql.Date, installCompleteDate)
+      .input('TotalLabor', sql.Decimal(18, 2), totalLabor)
+      .input('Hyperlink', sql.NVarChar(500), hyperlink)
+      .input('PaidExcludeFromPayroll', sql.Bit, paidExcludeFromPayroll)
+      .input('RequestID', sql.Int, requestID)
+      .query(`
+        INSERT INTO JobsTemp (
+          ProjectNumber, CustomerName, InstallCompleteDate,
+          TotalLabor, Hyperlink, PaidExcludeFromPayroll, RequestID
+        ) VALUES (
+          @ProjectNumber, @CustomerName, @InstallCompleteDate,
+          @TotalLabor, @Hyperlink, @PaidExcludeFromPayroll, @RequestID
+        )
+      `);
+
+    res.status(201).json({ message: 'Job inserted into JobsTemp successfully' });
+  } catch (err) {
+    console.error('❌ Error inserting job:', err);
+    res.status(500).json({ error: 'Failed to insert job into JobsTemp' });
+  }
+});
+
+
+app.get('/JobsTemp/by-request/:id', async (req, res) => {
+  const requestID = req.params.id;
+
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('RequestID', sql.Int, requestID)
+      .query(`
+        SELECT *
+        FROM JobsTemp
+        WHERE RequestID = @RequestID
+      `);
+
+    res.status(200).json(result.recordset);
+  } catch (error) {
+    console.error("Error fetching JobsTemp for request:", error);
+    res.status(500).json({ error: 'Failed to fetch jobs for request' });
+  }
+});
+
+app.post('/Requests/approve/:id', async (req, res) => {
+  const requestID = req.params.id;
+
+  try {
+    const pool = await sql.connect(config);
+
+    // Get user info for this request
+    const userResult = await pool.request()
+      .input('RequestID', sql.Int, requestID)
+      .query(`SELECT UserID, RequestTotal FROM Requests WHERE RequestID = @RequestID`);
+
+    const { UserID, RequestTotal } = userResult.recordset[0];
+
+    // Update status
+    await pool.request()
+      .input('RequestID', sql.Int, requestID)
+      .query(`
+        UPDATE Requests
+        SET Status = 'Approved',
+            ApprovedBy = 'jake@fleetpay.cash'
+        WHERE RequestID = @RequestID
+      `);
+
+    // Send email to user
+    const mailOptions = {
+      from: 'FleetPay Notifications <your_email@gmail.com>',
+      to: "jakewilliams117@gmail.com", // assuming this is the email
+      subject: '✅ Your FleetPay Payment Request Has Been Approved',
+      text: `Hello,
+    
+    We wanted to let you know that your FleetPay payment request for $${RequestTotal.toFixed(2)} has been approved. You can expect your deposit to be processed shortly.
+    
+    If you have any questions or concerns, please feel free to reach out to us directly at (770) 540-0454 during normal business hours.
+    
+    For assistance outside of business hours, you can also contact us by email at help@fleetpay.cash.
+    
+    Thank you for using FleetPay.
+    
+    — The FleetPay Team`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Request approved and email sent.' });
+  } catch (err) {
+    console.error('❌ Email/send error:', err);
+    res.status(500).json({ error: 'Approval failed or email could not be sent.' });
+  }
+});
 
 
 // #########################################################################

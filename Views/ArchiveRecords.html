@@ -145,81 +145,117 @@
     
     <br><br>
 
+    <!-- Toggle Button -->
+    <button id="toggleSidebar" class="btn btn-secondary" style="position: fixed; top: 20px; left: 20px; z-index: 999; background-color: #0e6170;">
+        <i class="fas fa-bars"></i>
+    </button>
+  
+
     <!-- Sidebar -->
-    <div class="sidebar" style="margin-top: 125px;">
-        <h2>Menu</h2>
-        <a href="Dashboard.html" style="text-align: center;"><strong>Dashboard</strong></a>
-        <hr>
+    <!-- Font Awesome CDN for icons (add in <head> if not already included) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        <a href="CreateRequest.html">Create Request</a>
-        <a href="ReviewRequest.html">Review Requests</a>
-        <a href="CompaniesAdmin.html">Company Management</a>
-        <a href="UsersAdmin.html">User Management</a>
-        <a href="Payrollexclude.html">Payroll Exclusions</a>
-        <a href="ArchiveRecords.html" style="background-color: #035b6a;">Payout Records</a>
-        <a href="#link5">Settings</a>
-    </div>
+        <div class="sidebar" id="sidebar">
 
+            <div class="sidebar-content">
+              <br><br>
+              <h3 class="section-header" style="text-align: center; text-decoration: wavy;">Main Menu</h3><br>
+              <a href="Dashboard.html" style="text-align: center; background-color: #416682;"><strong>💸 My Dashboard</strong></a>
+              <hr  class="section-header">
 
-    <div class="container" id="maincontain" style="background-color: rgb(78, 108, 135); width: 80%; margin-left: 355px; align-items: center;">
-        <div class="row">
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Requests</h6>
+              <a href="CreateRequest.html">🔸Create Request</a>
+              <a href="ReviewRequest.html">🔸Review Requests</a>
+              <a href="ReportIssue.html">🔸Help or Report Issue</a>
 
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Management</h6>
+              <a href="CompaniesAdmin.html">🔸Company Admin</a>
+              <a href="UsersAdmin.html">🔸User Admin</a>
+              <a href="BankLinking.html">🔸Banking Admin</a>
 
-        <div class="container mt-5">
-            <h1>Payment Requests</h1>
-            <hr>
-  <table>
-    <thead>
-      <tr>
-        <th>User GUID</th>
-        <th>User Name</th>
-        <th>User Email</th>
-        <th>Request Date</th>
-        <th>Total Labor</th>
-        <th>Payout Labor</th>
-        <th>Payout Fee</th>
-        <th>Approve</th>
-        <th>Action</th>
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Financial Records</h6>
+              <a href="Payrollexclude.html">🔸Payroll Exclusions</a>
+              <a href="ArchiveRecords.html" style="background-color: #035b6a;">🔸Payout Archives</a>
+              <a href="settings.html">🔸Settings</a>
+              <a href="contact.html">🔸Contact Us</a>
 
-      </tr>
-    </thead>
-    <tbody id="records-body">
-      <!-- Records will be dynamically added here -->
-    </tbody>
-  </table>
+            </div>
+          
+            <!-- Moved to bottom -->
+            <div class="user-panel">
+              <i class="fas fa-user-circle fa-2x me-2"></i>
+              
+            <div class="user-info">
+                <div><strong>Jake W.</strong></div>
+                <div style="font-size: 0.85em;">
+                    <i class="fas fa-badge-check" style="color: limegreen;"></i> Verified
+                  </div>
+                </div>
 
-  <hr>
-  </div>
-</div>
+            <div class="user-actions">
+                <i class="fas fa-cog mx-2" title="Settings"></i>
+                <i class="fas fa-sign-out-alt" title="Logout" onclick="logoutUser()" style="cursor: pointer;"></i>
+            </div>
+            </div>
 
-
-    <div class="row">
-
-      <div class="container mt-5">
-          <h1>Jobs in Selected Request Record</h1>
-          <h6>Excluded from main Payroll due to successful Fleetpay payout</h6>
-          <hr>
-          <div class="card">
-              <div class="card-body">
-                  <button class="btn btn-primary mb-3" id="fetchDataButton">Fetch Data</button>
-                  <table class="table table-bordered table-striped tr.visible">
-                      <thead>
-                          <tr>
-                              <th>Request ID</th>
-                              <th>Project Number</th>
-                              <th>Customer Name</th>
-                              <th>Install Date</th>
-                              <th>Total Labor</th>
-                              <th>Status</th>
-                              <th>Job Link</th>
-                          </tr>
-                      </thead>
-                      <tbody id="tableBody"></tbody>
-                  </table>
-              </div>
           </div>
-      </div>
-  </div>
 
 
-  </div>
+          <div class="main">
+
+            <!-- Page General Instructions -->
+            <div id="mainhead" style="margin-left: 300px;">
+                <h2 style="color: rgb(187, 187, 187);">Payout Archives ~ </h2>
+                <p style="color: white;">Current Fleetpay Instance: <span style="color: rgb(107, 251, 189); font-weight: bold;">SUDO</span></p>
+                <hr style="color: white; width: 85%;">
+                <br>
+
+                <p style="color: white;">This page is unable to populate without multiple records.  </p>
+            </div>
+                
+          <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
+          <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+
+          <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
+          <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
+        
+            <!-- Privacy Notice and Footer -->
+            <div class="bottom">
+        
+                <div style="margin-left: 300px;">
+                    <hr style="color: white; width: 85%;">
+                    <p style="color: white; width: 85%;"><span style="font-weight: bolder;">Privacy Notice:</span><br>
+                        FleetPay is committed to protecting your personal and financial information. The banking details you submit through this form are used solely for the purpose of processing direct deposit payments. We do not sell, share, or disclose your information to third parties outside of FleetPay unless required by law or authorized by you. All data is stored securely and handled in accordance with applicable data protection regulations and best practices.</p>
+        
+                    <p style="color: white;">For questions or Concerns, please visit our contact page.</p>
+                </div>
+        
+                <div id="myfooter">
+        
+                    <br>
+                    <div class="text-center">
+                    <hr style="color: white; width: 70%; margin-left: 300px; align-content: center;">
+                    </div>
+                    <div class="text-center" style="font-size: large; color: rgb(192, 191, 191); font-weight: bold;">Fleetpay.cash — A GenX Company — Ellis Ventures 2025 ~ JW</div>
+                    <br><br>
+                    
+                </div>
+            
+        
+            </div>
+        
+        </div>
+        
+        
+
+
+
+
+</body>

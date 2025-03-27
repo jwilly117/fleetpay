@@ -11,6 +11,18 @@
 
         }
 
+        .footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            transition: margin-left 0.3s ease; /* Match your sidebar */
+
+          }
+
+
+
         /* Main page header */
         .page-header {
             width: 100%;
@@ -36,6 +48,16 @@
             align-items: center;
             
 
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        #consentCheckbox, #twoFactor, #bankAccountAdded{
+            height: 30px;
+            width: 30px;
+            outline: #035b6a;
         }
 
         /* Header inside the container */
@@ -64,6 +86,10 @@
         .customer-info div strong {
             color: #003366; /* Darker blue for labels */
         }
+
+        .strobe-glow {
+            animation: strobeGlow 2s infinite;
+        }        
 
         /* Responsive design for smaller screens */
         @media (max-width: 700px) {
@@ -135,6 +161,25 @@
             overflow-y: auto;
         }
 
+        .pulse-border {
+            box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+            animation: pulse 1.5s infinite;
+            border: 2px solid #007bff;
+            transition: box-shadow 0.3s ease-in-out;
+          }
+          
+          @keyframes pulse {
+            0% {
+              box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+            }
+            70% {
+              box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+            100% {
+              box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+          }
+
         .mt-5 {
             margin-top: 2rem !important;
         }
@@ -151,6 +196,42 @@
             padding: 20px;
             box-sizing: border-box;
             justify-content: space-between; /* Pushes bottom section down */
+            transition: width 0.3s ease;
+            overflow: hidden;
+        }
+        .sidebar.collapsed {
+        width: 80px;
+        }
+
+        .section-header {
+            color: lightgray;
+            font-weight: bold;
+            margin: 15px 0 5px;
+            transition: opacity 0.2s ease;
+          }
+          
+          .sidebar.collapsed .section-header {
+            opacity: 0;
+            pointer-events: none;
+          }
+
+        .sidebar a,
+        .sidebar h2, .sidebar h3, h3,
+        .sidebar .user-panel div,
+        .sidebar .user-panel i.fa-cog,
+        .sidebar .user-panel i.fa-sign-out-alt {
+        transition: opacity 0.2s ease;
+        }
+
+        .sidebar.collapsed a,
+        .sidebar.collapsed h2,
+        .sidebar.collapsed .user-panel div {
+        opacity: 0;
+        pointer-events: none;
+        }
+
+        .sidebar.collapsed .user-panel {
+        justify-content: center;
         }
         
         .sidebar-content {
@@ -158,6 +239,13 @@
             flex-direction: column;
             gap: 5px;
         }
+
+        .form-check-label{
+            font-size: large;
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
         
         .sidebar a {
             display: block;
@@ -173,13 +261,32 @@
             background-color: #1c5a93;
         }
         
+
+
         .user-panel {
             display: flex;
             align-items: center;
             gap: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
             padding-top: 10px;
-        }
+            margin-top: auto;
+            margin-bottom: 40px; /* 👈 push it up from the bottom */
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-left: 9px;
+          }
+          
+          .user-panel #userIcon {
+            flex-shrink: 0;
+            margin: 0 auto;
+          }
+          
+          .user-info,
+          .user-actions {
+            transition: opacity 0.2s ease;
+          }
+
+
+
         .user-panel i {
             color: rgb(255, 255, 255);
         }
@@ -189,3 +296,42 @@
             font-size: 1.4em;
         }
         
+        .sidebar.collapsed .user-info,
+        .sidebar.collapsed .user-actions {
+        opacity: 0;
+        pointer-events: none;
+        display: none;
+        }
+
+        .sidebar.collapsed .user-panel {
+        justify-content: center;
+        }
+
+        .sidebar-link {
+            display: block;
+            margin: 8px 0;
+            padding: 10px 12px;
+            border-radius: 6px;
+            background-color: #0a4c75; /* fallback color */
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* ✨ Here's the shadow */
+          }
+          
+          .sidebar-link:hover {
+            background-color: #1b6aa1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Bigger shadow on hover */
+            transform: translateY(-1px); /* slight lift */
+          }
+
+          .approve-btn, .deny-btn{
+            border-radius: 5px;
+          }
+
+          .selected-request {
+            background-color: #758a98 !important;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+          }
+          
