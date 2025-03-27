@@ -192,18 +192,132 @@
           </div>
 
     <div class="container" id="maincontain" style="background-color:
-     rgb(78, 108, 135); width: 80%; margin-left: 355px; align-items: center;">
+     rgb(78, 108, 135); width: 75%; margin-left: 300px; align-items: center;">
         <d iv class="row">
 
         <hr>
-        <div class="container mt-5">
-            <h1>User Dashboard</h1>
+        <p style="color: white;">Current Fleetpay Instance: <span style="color: rgb(107, 251, 189); font-weight: bold;">SUDO</span></p>
+
+        <div class="container mt-5" style="background-color:
+     #e2eeff;"">
+
+     
+            <h1>Admin Dashboard</h1>
+
             <h6>General information</h6>
             <hr>
 
+            <!-- Begin cards -->
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 p-3">
+
+                <!-- Pending Requests -->
+                <div class="col">
+                  <div class="card text-white bg-primary shadow rounded-3 h-100">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Pending Requests</h5>
+                      <h2 id="pendingRequestsCount">0</h2>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Approved Requests -->
+                <div class="col">
+                  <div class="card text-white bg-success shadow rounded-3 h-100">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Approved Requests</h5>
+                      <h2 id="approvedRequestsCount">0</h2>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Total Users -->
+                <div class="col">
+                  <div class="card text-white bg-secondary shadow rounded-3 h-100">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Total Users</h5>
+                      <h2 id="totalUsersCount">0</h2>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Total Companies -->
+                <div class="col">
+                  <div class="card text-white bg-secondary shadow rounded-3 h-100">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Total Companies</h5>
+                      <h2 id="totalCompaniesCount">0</h2>
+                    </div>
+                  </div>
+                </div>
+                <!-- Help Tickets -->
+<div class="col">
+    <div class="card text-white bg-info shadow rounded-3 h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Help Tickets</h5>
+        <h2 id="helpTicketsCount">0</h2>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Today's Payout -->
+<div class="col">
+    <div class="card text-white bg-secondary shadow rounded-3 h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Today's Payout</h5>
+        <h2 id="todaysPayout">$0.00</h2>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Today's Keep -->
+  <div class="col">
+    <div class="card text-white bg-secondary shadow rounded-3 h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Today's Keep</h5>
+        <h2 id="todaysKeep">$0.00</h2>
+      </div>
+    </div>
+  </div>
+              
+              </div>
+              
+
+            <!-- End Cards -->
 
             <br><br><br>
 </body>
+
+<script>
+    async function loadDashboardStats() {
+      try {
+        const [reqRes, userRes, companyRes] = await Promise.all([
+          fetch('http://localhost:3000/Requests'),
+          fetch('http://localhost:3000/Users'),
+          fetch('http://localhost:3000/Companies')
+        ]);
+  
+        const requests = await reqRes.json();
+        const users = await userRes.json();
+        const companies = await companyRes.json();
+  
+        const pending = requests.filter(r => r.Status === 'Pending').length;
+        const approved = requests.filter(r => r.Status === 'Approved').length;
+  
+        document.getElementById('pendingRequestsCount').textContent = pending;
+        document.getElementById('approvedRequestsCount').textContent = approved;
+        document.getElementById('totalUsersCount').textContent = users.length;
+        document.getElementById('totalCompaniesCount').textContent = companies.length;
+  
+      } catch (err) {
+        console.error("Failed to load dashboard stats:", err);
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', loadDashboardStats);
+  </script>
+  
+
         </div>
     
         <hr>
