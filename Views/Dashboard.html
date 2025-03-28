@@ -149,50 +149,60 @@
 
     
     <br><br>
+        <!-- Toggle Button -->
+        <button id="toggleSidebar" class="btn btn-secondary" style="position: fixed; top: 20px; left: 20px; z-index: 999; background-color: #0e6170;">
+            <i class="fas fa-bars"></i>
+        </button>
+      
 
     <!-- Sidebar -->
     <!-- Font Awesome CDN for icons (add in <head> if not already included) -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
+
             <div class="sidebar-content">
-              <br>
-              <h3 style="text-align: center; text-decoration: wavy;">Main Menu</h3><br>
+              <br><br>
+              <h3 class="section-header" style="text-align: center; text-decoration: wavy;">Main Menu</h3><br>
               <a href="Dashboard.html" style="text-align: center; background-color: #416682;"><strong>💸 My Dashboard</strong></a>
-              <hr>
-              <h6 style="color: lightgray; font-weight: bolder;">Requests</h6>
+              <hr  class="section-header">
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Requests</h6>
 
               <a href="CreateRequest.html">🔸Create Request</a>
               <a href="ReviewRequest.html">🔸Review Requests</a>
-              <a href="CreateRequest.html">🔸Help or Report Issue</a>
+              <a href="ReportIssue.html">🔸Help or Report Issue</a>
 
-              <h6 style="color: lightgray; font-weight: bolder;">Management</h6>
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Management</h6>
 
               <a href="CompaniesAdmin.html">🔸Company Admin</a>
-              <a href="UsersAdmin.html">🔸User Management</a>
-              <h6 style="color: lightgray; font-weight: bolder;">Financial Records</h6>
+              <a href="UsersAdmin.html">🔸User Admin</a>
+              <a href="BankLinking.html">🔸Banking Admin</a>
+              <h6 class="section-header" style="color: lightgray; font-weight: bolder;">Financial Records</h6>
 
               <a href="Payrollexclude.html">🔸Payroll Exclusions</a>
               <a href="ArchiveRecords.html">🔸Payout Archives</a>
-              <a href="#link5">🔸Settings</a>
-              <a href="#link5">🔸Contact Us</a>
+              <a href="settings.html">🔸Settings</a>
+              <a href="contact.html">🔸Contact Us</a>
 
             </div>
           
             <!-- Moved to bottom -->
             <div class="user-panel">
               <i class="fas fa-user-circle fa-2x me-2"></i>
-              <div>
+              
+            <div class="user-info">
                 <div><strong>Jake W.</strong></div>
                 <div style="font-size: 0.85em;">
-                  <i class="fas fa-badge-check" style="color: limegreen;"></i> Verified
+                    <i class="fas fa-badge-check" style="color: limegreen;"></i> Verified
+                  </div>
                 </div>
-              </div>
-              <div class="ms-auto">
+
+            <div class="user-actions">
                 <i class="fas fa-cog mx-2" title="Settings"></i>
                 <i class="fas fa-sign-out-alt" title="Logout" onclick="logoutUser()" style="cursor: pointer;"></i>
-              </div>
             </div>
+            </div>
+
           </div>
 
     <div class="container" id="maincontain" style="background-color:
