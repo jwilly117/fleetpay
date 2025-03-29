@@ -1,4 +1,5 @@
 
+let allRequests = []; // Store fetched data globally
 
 
 // <!-- JavaScript for Parsing XLSX -->
@@ -468,68 +469,107 @@
     }
     
     
+
+    
     
     // Function to fetch records from new Requests structure
     async function fetchRequests() {
-        try {
+      try {
         const response = await fetch('http://localhost:3000/Requests');
-        if (response.ok) {
-            const records = await response.json();
-            const tableBody = document.getElementById('records-body');
+        if (!response.ok) throw new Error('Failed to fetch requests.');
     
-            // Clear existing rows
-            tableBody.innerHTML = '';
-    
-            // Populate the table with updated structure
-            records.forEach((record, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-            <td>${record.UserID || ''}</td>
-            <td>${record.ApprovedBy || ''}</td>
-            <td>${record.Status || ''}</td>
-            <td>${record.RequestDate ? new Date(record.RequestDate).toLocaleString() : ''}</td>
-            <td>${record.RequestTotal?.toFixed(2) || '0.00'}</td>
-            <td>${record.FPAmount?.toFixed(2) || '0.00'}</td>
-            <td>${record.FPPercentage?.toFixed(2) + '%' || '0%'}</td>
-            <td>${getApproveButton(record)}</td>
-            <td>${getActionButton(record)}</td>
-
-          `;
-
-                    // 👇 Add click event to load jobs tied to this request
-                row.addEventListener('click', () => {
-
-
-    // Remove previous highlight
-    document.querySelectorAll('#records-body tr').forEach(r => {
-      r.classList.remove('selected-request');
-    });
-
-    // Highlight the clicked row
-    row.classList.add('selected-request');
-
-    // Load jobs for the selected request
-
-
-                    loadJobsForRequest(record.RequestID);
-                });
-
-            tableBody.appendChild(row);
-    
-            // Optional animation delay
-            setTimeout(() => {
-                row.classList.add('visible');
-            }, index * 200);
-            });
-        } else {
-            const toast = new bootstrap.Toast(document.getElementById('successToast'));
-            toast.show();
-        }
-        } catch (err) {
+        allRequests = await response.json(); // Save globally
+        applyStatusFilter(); // Apply filter on load
+      } catch (err) {
         console.error(err);
         const toast = new bootstrap.Toast(document.getElementById('successToast'));
         toast.show();
+      }
+    }
+    
+    // Separate renderer that applies filters
+    function renderRequestsTable(records) {
+      const tableBody = document.getElementById('records-body');
+      tableBody.innerHTML = '';
+    
+      records.forEach((record, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${record.UserID || ''}</td>
+          <td>${record.ApprovedBy || ''}</td>
+          <td>${record.Status || ''}</td>
+          <td>${record.RequestDate ? new Date(record.RequestDate).toLocaleString() : ''}</td>
+          <td>${record.RequestTotal?.toFixed(2) || '0.00'}</td>
+          <td>${record.FPAmount?.toFixed(2) || '0.00'}</td>
+          <td>${record.FPPercentage?.toFixed(2) + '%' || '0%'}</td>
+          <td>${getApproveButton(record)}</td>
+          <td>${getActionButton(record)}</td>
+        `;
+    
+        // Row selection/highlight
+        row.addEventListener('click', () => {
+          document.querySelectorAll('#records-body tr').forEach(r => r.classList.remove('selected-request'));
+          row.classList.add('selected-request');
+          loadJobsForRequest(record.RequestID);
+        });
+    
+        setTimeout(() => {
+          row.classList.add('visible');
+        }, index * 200);
+    
+        tableBody.appendChild(row);
+      });
+    }
+    
+    // Attach filter buttons
+    document.getElementById('statusFilter').addEventListener('change', () => {
+      const selectedStatus = document.getElementById('statusFilter').value;
+      console.log(selectedStatus);
+    
+      if (selectedStatus === 'all') {
+        renderRequestsTable(allRequests); // <- full list
+      } else {
+        const filtered = allRequests.filter(req => req.Status === selectedStatus);
+        renderRequestsTable(filtered); // <- only filtered ones
+      }
+    });
+    
+    document.querySelectorAll('input[name="statusFilter"]').forEach(radio => {
+      radio.addEventListener('change', applyStatusFilter);
+    });
+
+    document.querySelectorAll('input[name="statusFilter"]').forEach(input => {
+      input.addEventListener('change', () => {
+        const filter = document.querySelector('input[name="statusFilter"]:checked').id;
+    
+        let filtered = allRequests;
+        if (filter === 'filterPending') {
+          filtered = allRequests.filter(r => r.Status === 'Pending');
+        } else if (filter === 'filterApproved') {
+          filtered = allRequests.filter(r => r.Status === 'Approved');
+        } else if (filter === 'filterPaid') {
+          filtered = allRequests.filter(r => r.Status === 'Paid');
         }
+    
+        renderRequestTable(filtered);
+      });
+    });
+    
+
+    function applyStatusFilter() {
+      const selected = document.querySelector('input[name="statusFilter"]:checked').id;
+    
+      let filteredRequests = allRequests;
+    
+      if (selected === 'filterPending') {
+        filteredRequests = allRequests.filter(req => req.Status === 'Pending');
+      } else if (selected === 'filterApproved') {
+        filteredRequests = allRequests.filter(req => req.Status === 'Approved');
+      } else if (selected === 'filterPaid') {
+        filteredRequests = allRequests.filter(req => req.Status === 'Paid');
+      }
+    
+      renderRequestsTable(filteredRequests);
     }
   
     async function approveRecord(requestID) {
