@@ -4,6 +4,9 @@ const sql = require('mssql');
 const cors = require('cors'); // Import cors middleware
 const bodyParser = require('body-parser'); // Middleware to parse JSON bodies
 const nodemailer = require('nodemailer');
+const path = require('path');
+const apps = express();
+
 
 // Configure your email transport
 const transporter = nodemailer.createTransport({
@@ -15,12 +18,16 @@ const transporter = nodemailer.createTransport({
 });
 
 
+
+
 // Initialize Express app
 const app = express();
 const port = 3000;
 
 // Enable CORS for all routes
 app.use(cors());
+
+apps.use(express.static(path.join(__dirname, 'public')));
 
 
 const config = {
@@ -245,24 +252,34 @@ app.get('/Users', async (req, res) => {
     const pool = await sql.connect(config);
     const result = await pool.request().query(`
       SELECT 
-        IDNumber,
-        FirstName,
-        LastName,
-        EmailAddress,
-        PhoneNumber,
-        Role,
-        TwoFactorEnabled,
-        Status
+        FirstName, LastName, EmailAddress, PhoneNumber, Role,
+        EmployerID, TwoFactorEnabled, Status
       FROM Users
-      ORDER BY LastName, FirstName
     `);
 
-    res.status(200).json(result.recordset);
-  } catch (error) {
-    console.error('❌ Error fetching users:', error);
-    res.status(500).json({ error: 'An error occurred while retrieving users.' });
+    res.json(result.recordset);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).send({ error: 'Failed to fetch users' });
   }
 });
+
+app.post('/Requests/markPaid/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const pool = await sql.connect(config);
+    await pool.request()
+      .input('id', sql.Int, id)
+      .query(`UPDATE Requests SET Status = 'Paid' WHERE RequestID = @id`);
+
+    res.send({ message: 'Request marked as paid.' });
+  } catch (err) {
+    console.error('Error marking paid:', err);
+    res.status(500).send({ error: 'Failed to mark request as paid.' });
+  }
+});
+
+
 
 
 app.post('/JobsTemp', async (req, res) => {
@@ -351,7 +368,7 @@ app.post('/Requests/approve/:id', async (req, res) => {
     // Send email to user
     const mailOptions = {
       from: 'FleetPay Notifications <your_email@gmail.com>',
-      to: "ryan@ellis-ventures.com", // assuming this is the email
+      to: "jakewilliams117@gmail.com", // assuming this is the email
       subject: '✅ Your FleetPay Payment Request Has Been Approved',
       text: `Hello,
     
@@ -374,6 +391,37 @@ app.post('/Requests/approve/:id', async (req, res) => {
     res.status(500).json({ error: 'Approval failed or email could not be sent.' });
   }
 });
+
+
+// Login
+
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+      .input('username', sql.NVarChar, username)
+      .query(`SELECT * FROM Users WHERE [EmailAddress] = @username OR [FirstName] = @username`);
+
+    const user = result.recordset[0];
+
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    // Simple password match (add hashing later)
+    if (user.PasswordHash !== password) {
+      return res.status(401).json({ error: 'Incorrect password' });
+    }
+
+    res.json({ message: 'Login successful', user });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'ℹ️ Invalid Login Credentials' });
+  }
+});
+
 
 
 // #########################################################################

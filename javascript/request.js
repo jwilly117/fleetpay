@@ -416,6 +416,57 @@
             document.getElementById('totalField').value = '';
             document.getElementById('percentageField').value = '';
     }
+
+    function getApproveButton(record) {
+      const id = record.RequestID;
+      const status = record.Status;
+    
+      if (status === "Pending") {
+        return `<button class="approve-btn" onclick="approveRecord(${id})">Approve</button>`;
+      } else if (status === "Approved") {
+        return `<button class="paid-btn" onclick="markPaid(${id})">!Paid</button>`;
+      } else if (status === "Paid") {
+        return `<span class="text-success fw-bold">✔  Paid</span>`;
+      } else {
+        return '';
+      }
+    }
+    
+    function getActionButton(record) {
+      const id = record.RequestID;
+      const status = record.Status;
+    
+      if (status === "Pending") {
+        return `<button class="deny-btn" onclick="deleteRecord(${id})">Deny</button>`;
+      } else if (status === "Approved") {
+        return `<button class="modify-btn" onclick="modifyRecord(${id})">Modify</button>`;
+      } else {
+        return '';
+      }
+    }
+    
+
+
+    async function markPaid(requestID) {
+      try {
+        const response = await fetch(`http://localhost:3000/Requests/markPaid/${requestID}`, {
+          method: 'POST'
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          alert(data.message);
+          fetchRequests(); // Refresh table
+        } else {
+          alert("Failed to mark request as paid.");
+        }
+      } catch (err) {
+        console.error("Error marking as paid:", err);
+        alert("An error occurred.");
+      }
+    }
+    
+    
     
     // Function to fetch records from new Requests structure
     async function fetchRequests() {
@@ -432,16 +483,17 @@
             records.forEach((record, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${record.UserID || ''}</td>
-                <td>${record.ApprovedBy || ''}</td>
-                <td>${record.Status || ''}</td>
-                <td>${record.RequestDate ? new Date(record.RequestDate).toLocaleString() : ''}</td>
-                <td>${record.RequestTotal?.toFixed(2) || '0.00'}</td>
-                <td>${record.FPAmount?.toFixed(2) || '0.00'}</td>
-                <td>${record.FPPercentage?.toFixed(2) + '%' || '0%'}</td>
-                <td><button class="approve-btn" onclick="approveRecord(${record.RequestID})">Approve</button></td>
-                <td><button class="deny-btn" onclick="deleteRecord(${record.RequestID})">Deny</button></td>
-            `;
+            <td>${record.UserID || ''}</td>
+            <td>${record.ApprovedBy || ''}</td>
+            <td>${record.Status || ''}</td>
+            <td>${record.RequestDate ? new Date(record.RequestDate).toLocaleString() : ''}</td>
+            <td>${record.RequestTotal?.toFixed(2) || '0.00'}</td>
+            <td>${record.FPAmount?.toFixed(2) || '0.00'}</td>
+            <td>${record.FPPercentage?.toFixed(2) + '%' || '0%'}</td>
+            <td>${getApproveButton(record)}</td>
+            <td>${getActionButton(record)}</td>
+
+          `;
 
                     // 👇 Add click event to load jobs tied to this request
                 row.addEventListener('click', () => {
@@ -500,7 +552,6 @@
     }
     
 
-
 // 
 // Remember the Window.onLoad does not trigger from this js file.
 // 
@@ -544,3 +595,13 @@ const testData = {
 }
 
 // <!--<!--<!-- TEST SCRIPT TO INSERT RECORD INTO REQUESTS TABLE -->-->-->
+    function logoutUser() {
+      // Clear saved login info
+      localStorage.removeItem('user');
+  
+      // Optional: Clear sessionStorage or cookies if used
+      // sessionStorage.clear();
+  
+      // Redirect to login page
+      window.location.href = 'Login.html';
+    }

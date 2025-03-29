@@ -136,6 +136,18 @@
   </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  function logoutUser() {
+    // Clear saved login info
+    localStorage.removeItem('user');
+
+    // Optional: Clear sessionStorage or cookies if used
+    // sessionStorage.clear();
+
+    // Redirect to login page
+    window.location.href = 'login.html';
+  }
+</script>
 
 
 </head>
@@ -227,42 +239,51 @@
 
                 <!-- Pending Requests -->
                 <div class="col">
-                  <div class="card text-white bg-primary shadow rounded-3 h-100">
-                    <div class="card-body text-center">
-                      <h5 class="card-title">Pending Requests</h5>
-                      <h2 id="pendingRequestsCount">0</h2>
+                  <a href="ReviewRequest.html" class="text-decoration-none">
+                    <div class="card text-white bg-primary shadow rounded-3 h-100 card-hover">
+                      <div class="card-body text-center">
+                        <h5 class="card-title">Pending Requests</h5>
+                        <h2 id="pendingRequestsCount">0</h2>
+                      </div>
                     </div>
-                  </div>
+                  </a>
                 </div>
+
               
                 <!-- Approved Requests -->
                 <div class="col">
-                  <div class="card text-white bg-success shadow rounded-3 h-100">
+                  <a href="ReviewRequest.html" class="text-decoration-none">
+                  <div class="card text-white bg-success shadow rounded-3 h-100 card-hover">
                     <div class="card-body text-center">
                       <h5 class="card-title">Approved Requests</h5>
                       <h2 id="approvedRequestsCount">0</h2>
                     </div>
                   </div>
+                  </a>
                 </div>
               
                 <!-- Total Users -->
                 <div class="col">
-                  <div class="card text-white bg-secondary shadow rounded-3 h-100">
+                  <a href="UsersAdmin.html" class="text-decoration-none">
+                  <div class="card text-white bg-secondary shadow rounded-3 h-100 card-hover">
                     <div class="card-body text-center">
                       <h5 class="card-title">Total Users</h5>
                       <h2 id="totalUsersCount">0</h2>
                     </div>
                   </div>
+                  </a>
                 </div>
               
                 <!-- Total Companies -->
                 <div class="col">
-                  <div class="card text-white bg-secondary shadow rounded-3 h-100">
+                  <a href="CompaniesAdmin.html" class="text-decoration-none">
+                  <div class="card text-white bg-secondary shadow rounded-3 h-100 card-hover">
                     <div class="card-body text-center">
                       <h5 class="card-title">Total Companies</h5>
                       <h2 id="totalCompaniesCount">0</h2>
                     </div>
                   </div>
+                  </a>
                 </div>
                 <!-- Help Tickets -->
 <div class="col">
@@ -340,6 +361,9 @@
 
             <br><br><br>
         </div>
+
+
+        
         
 </body>
 
@@ -375,21 +399,38 @@
 
         <br>
         <div class="text-center">
-          <hr style="color: white; width: 70%; margin-left: 300px; align-content: center;">
+          <hr style="color: white; width: 75%; margin-left: 300px; align-content: center;">
         </div>
         <div class="text-center" style="font-size: large; color: rgb(192, 191, 191); font-weight: bold;">Fleetpay.cash — A GenX Company — Ellis Ventures 2025 ~ JW</div>
         <br><br>
         
       </div>
+      
 
+
+    </div>
+
+    <div class="card text-white bg-secondary shadow-sm my-4" style="max-width: 75%; border-radius: 1rem; margin-left: 300px;">
+      <div class="row g-0">
+        
+        <!-- Left: Text Content -->
+        <div class="col-md-7 p-4 d-flex flex-column justify-content-center">
+          <h4 class="card-title">
+             Coming Soon: The FleetPay Card 💳
+          </h4>
+          <p class="card-text">
+            Discover the upcoming FleetPay Card — designed to make your payouts faster, your transactions smoother, and your funds more accessible than ever before.
+          </p>
+          <p class="card-text">Check your email for notifications soon about the FleePay Card and additional offers.</p>
+          <button class="btn btn-light btn-sm mt-2 disabled" style="pointer-events: none; font-weight: bold;">Launching Soon</button>
         </div>
     
-        <hr>
-        
-        <br><br><br>
+        <!-- Right: Promo Image -->
+        <div class="col-md-5 d-flex align-items-center justify-content-center p-3">
+          <img src="/img/pngimg.com - credit_card_PNG99 (1).png" alt="FleetPay Card Preview" class="img-fluid rounded shadow" style="max-height: 200px;">
+        </div>
     
-
-
+      </div>
     </div>
 
 
@@ -456,8 +497,29 @@
     
     </script>
 
+
+          <!-- Javascript to toggle sidebar -->
+          <script>
+            document.getElementById('toggleSidebar').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+            });
+        </script>
 </body>
 </html>
+
+<script>
+  function logoutUser() {
+    // Clear saved login info
+    localStorage.removeItem('user');
+
+    // Optional: Clear sessionStorage or cookies if used
+    // sessionStorage.clear();
+
+    // Redirect to login page
+    window.location.href = '/Login.html';
+  }
+</script>
 
 
 

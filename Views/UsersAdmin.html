@@ -281,6 +281,24 @@
       <div class="card shadow rounded-4">
         <div class="card-body" style="background-color: #e2eeff;">
           <h3 class="card-title mb-4 text-center text-primary">Current Users</h3>
+
+          <div class="mb-3 text-center">
+            <label for="employerFilter" class="form-label fw-bold text-dark">Filter by Employer ID:</label>
+            <select id="employerFilter" class="form-select w-auto d-inline-block">
+              <option value="all" selected>View All</option>
+              <option value="1">Stark Industries #1</option>
+              <option value="2">Oscorp #2</option>
+              <option value="3">Roxxon Energy Corp #3</option>
+              <option value="4">Hammer Industries #4</option>
+              <option value="5">S.H.I.E.L.D. #5</option>
+              <option value="6">Wakandan Design Group #6</option>
+              <option value="7">Xavier Institute #7</option>
+              <option value="8">Daily Bugle LLC #8</option>
+              <option value="9">Incredible Installations #9</option>
+              <option value="10">Fire-Ballz #10</option>
+            </select>
+          </div>
+          
     
           <div id="userList" class="row g-4">
             <!-- User cards will be injected here -->
@@ -373,41 +391,56 @@
           </script>
           
 
-
           <script>
+            let allUsers = [];
+          
             async function loadUserList() {
               try {
                 const response = await fetch('http://localhost:3000/Users');
                 if (!response.ok) throw new Error("Failed to fetch users.");
-          
-                const users = await response.json();
-                const listContainer = document.getElementById('userList');
-                listContainer.innerHTML = '';
-          
-                users.forEach(user => {
-                  const col = document.createElement('div');
-                  col.className = 'col-md-6';
-          
-                  col.innerHTML = `
-                    <div class="border rounded p-3 bg-light shadow-sm">
-                      <h5 class="text-dark">${user.FirstName} ${user.LastName}</h5>
-                      <p class="mb-1"><strong>Email:</strong> ${user.EmailAddress}</p>
-                      <p class="mb-1"><strong>Phone:</strong> ${user.PhoneNumber || 'N/A'}</p>
-                      <p class="mb-1"><strong>Role:</strong> ${user.Role}</p>
-                      <p class="mb-1"><strong>2FA:</strong> ${user.TwoFactorEnabled ? 'Enabled' : 'Disabled'}</p>
-                      <p class="mb-1"><strong>Status:</strong> ${user.Status}</p>
-                    </div>
-                  `;
-          
-                  listContainer.appendChild(col);
-                });
-          
+                allUsers = await response.json();
+                renderUserCards(allUsers);
               } catch (err) {
                 console.error('Error loading users:', err);
               }
             }
           
-            // Call it on page load
+            function renderUserCards(users) {
+              const listContainer = document.getElementById('userList');
+              listContainer.innerHTML = '';
+          
+              users.forEach(user => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6';
+          
+                col.innerHTML = `
+                  <div class="border rounded p-3 bg-light shadow-sm">
+                    <h5 class="text-dark">${user.FirstName} ${user.LastName}</h5>
+                    <p class="mb-1"><strong>Email:</strong> ${user.EmailAddress}</p>
+                    <p class="mb-1"><strong>Phone:</strong> ${user.PhoneNumber || 'N/A'}</p>
+                    <p class="mb-1"><strong>Role:</strong> ${user.Role}</p>
+                    <p class="mb-1"><strong>Company:</strong> ${user.EmployerID ?? 'Unassigned'}</p>
+                    <p class="mb-1"><strong>2FA:</strong> ${user.TwoFactorEnabled ? 'Enabled' : 'Disabled'}</p>
+                    <p class="mb-1"><strong>Status:</strong> ${user.Status}</p>
+                  </div>
+                `;
+          
+                listContainer.appendChild(col);
+              });
+            }
+          
+            // Event listener for the dropdown
+            document.getElementById('employerFilter').addEventListener('change', function () {
+              const selected = this.value;
+              if (selected === 'all') {
+                renderUserCards(allUsers);
+              } else {
+                const filtered = allUsers.filter(user => user.EmployerID == selected);
+                renderUserCards(filtered);
+              }
+            });
+          
+            // Load users on page ready
             document.addEventListener('DOMContentLoaded', loadUserList);
           </script>
           

@@ -94,6 +94,10 @@
     </style>
 
 <style>
+
+.approve-btn{
+            background-color: rgb(63, 134, 192);
+          }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -133,6 +137,9 @@
       transform: translateY(0);
     }
   </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 </head>
 <body>
 
@@ -252,7 +259,9 @@
           <hr>
           <div class="card">
               <div class="card-body">
-                  <button class="btn btn-primary mb-3" id="fetchDataButton">Fetch Data</button>
+                <div class="text-end">
+                    <button class="btn btn-success mb-3" onclick="exportTableToExcel()">Export to Excel</button>
+                  </div>
                   <table class="table table-bordered table-striped tr.visible">
                       <thead>
                           <tr>
@@ -393,6 +402,26 @@
         sidebar.classList.toggle('collapsed');
         });
     </script>
+
+
+<script>
+    function exportTableToExcel() {
+      const table = document.getElementById("tableBody").parentNode;
+  
+      // Get the first row from the tableBody
+      const firstRow = document.querySelector('#tableBody tr');
+      let requestId = 'unknown';
+  
+      if (firstRow) {
+        const requestIdCell = firstRow.querySelector('td'); // Assuming RequestID is in the first column
+        requestId = requestIdCell?.textContent?.trim() || 'unknown';
+      }
+  
+      const workbook = XLSX.utils.table_to_book(table, { sheet: "Jobs" });
+      XLSX.writeFile(workbook, `Fleetpay_Request_${requestId}.xlsx`);
+    }
+  </script>
+  
   
 
 
