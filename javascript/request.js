@@ -446,7 +446,6 @@ let allRequests = []; // Store fetched data globally
         return '';
       }
     }
-    
 
 
     async function markPaid(requestID) {

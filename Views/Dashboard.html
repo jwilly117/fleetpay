@@ -135,6 +135,8 @@
     }
   </style>
 
+  <!-- <script src="/javascript/request.js"></script> -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   function logoutUser() {
@@ -148,7 +150,62 @@
     window.location.href = 'login.html';
   }
 </script>
+<script>
 
+    
+async function calculateTodaysPayout() {
+  try {
+    const response = await fetch('http://localhost:3000/Requests');
+    if (!response.ok) throw new Error("Failed to fetch requests");
+
+    const data = await response.json();
+
+    let total = 0;
+
+    data.forEach(request => {
+      if (request.Status === "Approved") {
+        total += parseFloat(request.RequestTotal) || 0;
+      }
+    });
+
+    let fptotal = total*0.105;
+
+    document.getElementById("todaysPayout").textContent = total.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
+    document.getElementById("currentRDA").textContent = total.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
+
+    document.getElementById("currentKeep").textContent = fptotal.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
+    document.getElementById("todaysKeep").textContent = fptotal.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
+  } catch (err) {
+    console.error("Error calculating payout:", err);
+  }
+}
+
+    
+
+  document.addEventListener('DOMContentLoaded', () => {
+    calculateTodaysPayout();
+  });
+  
+  console.log(total);
+  
+  </script>
+  
 
 </head>
 <body>
@@ -493,9 +550,12 @@
         <a href="insert.html" style="color: white;">Go to Insert Page</a>
     </div>
 
+    
 
     
     </script>
+
+    
 
 
           <!-- Javascript to toggle sidebar -->
@@ -504,6 +564,10 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('collapsed');
             });
+
+
+
+            
         </script>
 </body>
 </html>
@@ -519,7 +583,13 @@
     // Redirect to login page
     window.location.href = '/Login.html';
   }
+
+
+
 </script>
+
+
+
 
 
 

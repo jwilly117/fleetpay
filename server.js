@@ -95,6 +95,30 @@ app.post('/Requests', async (req, res) => {
         )
       `);
 
+        // ✅ Send notification to admin
+        const mailOptions = {
+          from: '"FleetPay System" <jake@fleetpay.cash>',
+          to: 'jakewilliams117@gmail.com',  // Admin address
+          subject: 'New Payment Request Received! ',
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 10px;">
+              <h3 style="color: #2c3e50;">New Request Submitted</h3>
+              <p><strong>User:</strong> ${user}</p>
+              <p><strong>Total Amount:</strong> $${requestTotal.toFixed(2)}</p>
+              <p><strong>Date:</strong> ${new Date(requestDate).toLocaleString()}</p>
+              <p style="margin-top: 20px;">Visit the admin panel to review this request.</p>
+
+              <hr style="margin: 30px 0;">
+              <p style="text-align: center; font-size: 14px; color: #888;">FleetPay — Automating payout requests with ease</p>
+
+            </div>
+                  `
+            };
+
+    await transporter.sendMail(mailOptions);
+    
+ 
+
     const requestId = result.recordset[0].RequestID;
 
     res.status(201).send({
@@ -186,16 +210,26 @@ app.get('/Companies', async (req, res) => {
   try {
     const pool = await sql.connect(config);
     const result = await pool.request().query(`
-      SELECT CompanyID, CompanyName 
-      FROM Companies
-      ORDER BY CompanyName
+      SELECT 
+        CompanyID, 
+        CompanyName, 
+        PrimaryContact, 
+        PrimaryID, 
+        PaymentInterval, 
+        CompanyEmail, 
+        CompanyPhone, 
+        Status, 
+        Notes
+      FROM dbo.Companies
     `);
+
     res.status(200).json(result.recordset);
   } catch (error) {
     console.error('Error fetching companies:', error);
-    res.status(500).json({ error: 'An error occurred while fetching companies.' });
+    res.status(500).send({ error: 'Failed to fetch company data.' });
   }
 });
+
 
 
 app.post('/Users', async (req, res) => {
@@ -279,6 +313,53 @@ app.post('/Requests/markPaid/:id', async (req, res) => {
   }
 });
 
+app.patch('/Companies/:id', async (req, res) => {
+  const companyId = req.params.id;
+  const {
+    CompanyName,
+    PrimaryContact,
+    PrimaryID,
+    PaymentInterval,
+    CompanyEmail,
+    CompanyPhone,
+    Status,
+    TwoFactorEnabled,
+    Notes
+  } = req.body;
+
+  try {
+    const pool = await sql.connect(config);
+    await pool.request()
+      .input('CompanyID', sql.Int, companyId)
+      .input('CompanyName', sql.NVarChar(255), CompanyName)
+      .input('PrimaryContact', sql.NVarChar(255), PrimaryContact)
+      .input('PrimaryID', sql.NVarChar(255), PrimaryID)
+      .input('PaymentInterval', sql.NVarChar(50), PaymentInterval)
+      .input('CompanyEmail', sql.NVarChar(255), CompanyEmail)
+      .input('CompanyPhone', sql.NVarChar(50), CompanyPhone)
+      .input('Status', sql.NVarChar(50), Status)
+      .input('TwoFactorEnabled', sql.Bit, TwoFactorEnabled)
+      .input('Notes', sql.NVarChar(sql.MAX), Notes)
+      .query(`
+        UPDATE Companies SET
+          CompanyName = @CompanyName,
+          PrimaryContact = @PrimaryContact,
+          PrimaryID = @PrimaryID,
+          PaymentInterval = @PaymentInterval,
+          CompanyEmail = @CompanyEmail,
+          CompanyPhone = @CompanyPhone,
+          Status = @Status,
+          TwoFactorEnabled = @TwoFactorEnabled,
+          Notes = @Notes
+        WHERE CompanyID = @CompanyID
+      `);
+
+    res.status(200).json({ message: "Company updated successfully" });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ error: "Failed to update company" });
+  }
+});
 
 
 
