@@ -404,30 +404,104 @@
                 console.error('Error loading users:', err);
               }
             }
+
+            function openEditModal(user) {
+  document.getElementById('editUserId').value = user.IDNumber;
+  document.getElementById('editFirstName').value = user.FirstName;
+  document.getElementById('editLastName').value = user.LastName;
+  document.getElementById('editEmail').value = user.EmailAddress;
+  document.getElementById('editPhone').value = user.PhoneNumber || '';
+  document.getElementById('editRole').value = user.Role;
+  document.getElementById('editStatus').value = user.Status || 'Active';
+
+  const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+  modal.show();
+}
           
             function renderUserCards(users) {
               const listContainer = document.getElementById('userList');
               listContainer.innerHTML = '';
-          
+
               users.forEach(user => {
                 const col = document.createElement('div');
                 col.className = 'col-md-6';
-          
+
                 col.innerHTML = `
-                  <div class="border rounded p-3 bg-light shadow-sm">
-                    <h5 class="text-dark">${user.FirstName} ${user.LastName}</h5>
-                    <p class="mb-1"><strong>Email:</strong> ${user.EmailAddress}</p>
-                    <p class="mb-1"><strong>Phone:</strong> ${user.PhoneNumber || 'N/A'}</p>
-                    <p class="mb-1"><strong>Role:</strong> ${user.Role}</p>
-                    <p class="mb-1"><strong>Company:</strong> ${user.EmployerID ?? 'Unassigned'}</p>
-                    <p class="mb-1"><strong>2FA:</strong> ${user.TwoFactorEnabled ? 'Enabled' : 'Disabled'}</p>
-                    <p class="mb-1"><strong>Status:</strong> ${user.Status}</p>
+                <div class="border rounded p-3 bg-light shadow-sm d-flex justify-content-between align-items-center user-card" style="cursor: pointer;" onclick='openEditModal(${JSON.stringify(user)})'>
+                    <div>
+                      <h5 class="text-dark mb-1">${user.FirstName} ${user.LastName}</h5>
+                      <p class="mb-1"><strong>Email:</strong> ${user.EmailAddress}</p>
+                      <p class="mb-1"><strong>Phone:</strong> ${user.PhoneNumber || 'N/A'}</p>
+                      <p class="mb-1"><strong>Role:</strong> ${user.Role}</p>
+                      <p class="mb-1"><strong>Company:</strong> ${user.EmployerID ?? 'Unassigned'}</p>
+                      <p class="mb-1"><strong>2FA:</strong> ${user.TwoFactorEnabled ? 'Enabled' : 'Disabled'}</p>
+                      <p class="mb-1"><strong>Status:</strong> ${user.Status}</p>
+                    </div>
+                    <div>
+                      <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Icon" style="height: 150px;">
+                    </div>
                   </div>
                 `;
-          
+
+                // Click event to open modal
+                // col.querySelector('.user-card').addEventListener('click', () => {
+                //   document.getElementById('modalUserName').textContent = `${user.FirstName} ${user.LastName}`;
+                //   document.getElementById('modalUserEmail').textContent = user.EmailAddress;
+                //   document.getElementById('modalUserPhone').textContent = user.PhoneNumber || 'N/A';
+                //   document.getElementById('modalUserRole').textContent = user.Role;
+                //   document.getElementById('modalUserCompany').textContent = user.EmployerID ?? 'Unassigned';
+                //   document.getElementById('modalUserStatus').textContent = user.Status;
+
+                //   // Show modal
+                //   const userModal = new bootstrap.Modal(document.getElementById('userModal'));
+                //   userModal.show();
+                // });
+
+
+
+                document.getElementById('editUserForm').addEventListener('submit', async function (e) {
+                  e.preventDefault();
+
+                  const updatedUser = {
+                    FirstName: document.getElementById('editFirstName').value,
+                    LastName: document.getElementById('editLastName').value,
+                    EmailAddress: document.getElementById('editEmail').value,
+                    PhoneNumber: document.getElementById('editPhone').value,
+                    Role: document.getElementById('editRole').value,
+                    Status: document.getElementById('editStatus').value,
+                  };
+
+                  const userId = document.getElementById('editUserId').value;
+
+                  try {
+                    const response = await fetch(`http://localhost:3000/Users/${userId}`, {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(updatedUser)
+                    });
+
+                    if (response.ok) {
+                      alert('User updated successfully!');
+                      const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+                      modal.hide();
+                      loadUserList();
+                    } else {
+                      alert('Failed to update user.');
+                    }
+                  } catch (err) {
+                    console.error('Error updating user:', err);
+                    alert('An error occurred.');
+                  }
+                });
+
+
                 listContainer.appendChild(col);
               });
             }
+
+
+
+
           
             // Event listener for the dropdown
             document.getElementById('employerFilter').addEventListener('change', function () {
@@ -453,6 +527,58 @@
         sidebar.classList.toggle('collapsed');
         });
     </script>
+
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <form id="editUserForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editUserId">
+          <div class="mb-3">
+            <label for="editFirstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="editFirstName" required>
+          </div>
+          <div class="mb-3">
+            <label for="editLastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="editLastName" required>
+          </div>
+          <div class="mb-3">
+            <label for="editEmail" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="editEmail" required>
+          </div>
+          <div class="mb-3">
+            <label for="editPhone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="editPhone">
+          </div>
+          <div class="mb-3">
+            <label for="editRole" class="form-label">Role</label>
+            <input type="text" class="form-control" id="editRole">
+          </div>
+          <div class="mb-3">
+            <label for="editStatus" class="form-label">Status</label>
+            <select class="form-select" id="editStatus">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Suspended">Suspended</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
   
   <div id="myfooter">
     

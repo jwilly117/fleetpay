@@ -111,7 +111,7 @@
     }
     button {
       padding: 5px 10px;
-      background-color: #e74c3c;
+      background-color: #f15d4d;
       color: white;
       border: none;
       cursor: pointer;
@@ -119,12 +119,9 @@
     button:hover {
       background-color: #c0392b;
     }
-    .approve-btn {
-      background-color: #1f7a45;
-      color: white;
-    }
+
     .approve-btn:hover {
-      background-color: #27ae60;
+      background-color: #235c92;
     }
         /* Animation styles */
         tbody tr {
@@ -213,11 +210,41 @@
             <p style="color: white; width: 80%;">Please note that a company must be created before its respective users can be created, even in the case of single person sole proprietorships. Direct Company employees can be added underneath the highest parent in a group. Example: Incredible Installations would be the parent company for Luke Grant. </p>
             <p style="color: white; width: 80%;">For more information and FAQ, please visit our <a href="ReportIssue.html" style="color: rgb(188, 171, 240);">Help Page</a>
         </div>
+        
 
 
     <div class="container" id="maincontain" 
     style="background-color: 97c5db; width: 75%; 
       margin-left: 300px; align-items: center;">
+
+<br>
+
+<div class="row mb-4" style="padding-left: 20px;padding-right: 20px;">
+    <!-- Left Card: Job Source Info -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <h5 class="mb-0">Your Job Source: <br><span class="text-muted">Incredible / PF</span></h5>
+          <img src="/img/logos-customer-projectsforce.png" alt="Job Source Logo" style="height: 40px;">
+        </div>
+      </div>
+    </div>
+  
+    <!-- Right Card: Help Prompt -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex align-items-center justify-content-center">
+          <p class="mb-0 text-center">
+            <strong>Not your job source or need to add another?</strong><br>
+            <a href="ReportIssue.html" class="text-primary fw-bold">Use Our Help Page</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
 
         <div class="row">
 
@@ -335,30 +362,46 @@
         <hr>
         <br><br><br>
     
-        <!-- Modal -->
-        <div class="modal fade" id="googleModal" tabindex="-1" aria-labelledby="googleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="googleModalLabel">Request Submission</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Please review your amount before submitting a payment request. We will review and send you correspondance on your deposit to your email account shortly. 
-                        <hr>
-                        <div class="mb-3">
-                            <label for="modalPercentageField" class="form-label" style="font-weight:bold;">Your Deposit Amount:</label>
-                            <input type="text" style="font-weight: bold; text-align: center;" id="modalPercentageField" class="form-control glow-input" readonly>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="approveButton" data-bs-dismiss="modal" onclick="insertTestRecord()">Submit Request</button>
-                    </div>
-                </div>
-            </div>
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header bg-warning text-white">
+          <h5 class="modal-title" id="confirmModalLabel">Please Confirm your Action</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-    
+        <div class="modal-body" id="confirmModalMessage">
+          Are you sure you want to proceed?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" id="confirmModalConfirmBtn">Yes, Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let confirmAction = null; // holds the function to call after confirmation
+  
+    function showConfirmation(message, onConfirm) {
+      document.getElementById('confirmModalMessage').textContent = message;
+      confirmAction = onConfirm;
+  
+      const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+      modal.show();
+    }
+  
+    document.getElementById('confirmModalConfirmBtn').addEventListener('click', () => {
+      if (typeof confirmAction === 'function') {
+        confirmAction();
+      }
+      const modal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+      modal.hide();
+    });
+  </script>
+  
+  
     
          <!-- Toast -->
          <div class="toast-container position-fixed bottom-0 end-0 p-3">

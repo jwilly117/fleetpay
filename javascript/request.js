@@ -422,9 +422,10 @@
       const status = record.Status;
     
       if (status === "Pending") {
-        return `<button class="approve-btn" onclick="approveRecord(${id})">Approve</button>`;
+        return `<button class="approve-btn" onclick="showConfirmation('Approve this request?', () => approveRecord(${record.RequestID}))">Approve</button>`;
       } else if (status === "Approved") {
-        return `<button class="paid-btn" onclick="markPaid(${id})">!Paid</button>`;
+        return `<button class=" paid-btn" onclick="showConfirmation('Mark this request as Paid?', () => markRequestPaid(${record.RequestID}))">! Paid</button>
+`;
       } else if (status === "Paid") {
         return `<span class="text-success fw-bold">✔  Paid</span>`;
       } else {
@@ -437,7 +438,7 @@
       const status = record.Status;
     
       if (status === "Pending") {
-        return `<button class="deny-btn" onclick="deleteRecord(${id})">Deny</button>`;
+        return `<button class="deny-btn" onclick="showConfirmation('Deny this request?', () => deleteRecord(${record.RequestID}))">Deny</button>`;
       } else if (status === "Approved") {
         return `<button class="modify-btn" onclick="modifyRecord(${id})">Modify</button>`;
       } else {
