@@ -474,6 +474,24 @@ app.post('/Requests/approve/:id', async (req, res) => {
 });
 
 
+app.get('/JobsTemp/paid', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().query(`
+      SELECT jt.RequestID, jt.ProjectNumber, jt.CustomerName, jt.InstallCompleteDate, jt.TotalLabor, r.Status, jt.Hyperlink
+      FROM JobsTemp jt
+      JOIN Requests r ON jt.RequestID = r.RequestID
+    `);
+
+    res.status(200).json(result.recordset);
+  } catch (err) {
+    console.error('Error fetching paid jobs:', err);
+    res.status(500).json({ error: 'Failed to load paid jobs.' });
+  }
+});
+
+
+
 // Login
 
 app.post('/login', async (req, res) => {

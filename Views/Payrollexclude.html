@@ -14,6 +14,9 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
     <style>
         /* Customize table-active class for light yellow background */
         .table-active {
@@ -215,19 +218,95 @@
           <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
           <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
 
+    <div class="container" id="maincontain" 
+        style="background-color: 97c5db; width: 75%; 
+        margin-left: 300px; align-items: center;">
+
+          <div class="row">
+
+            <div class="container mt-5" style="background-color: #e2eeff;">
+                <h1>Jobs already paid by Fleetpay Deposits</h1><br>
+                <h6>ℹ️ Please note: Once these jobs have been approved, they will be removed from the normal payroll process immediately.</h6>
+                <hr>
+                <div class="card">
+                    <div class="card-body">
+                      <div class="text-end">
+                          <button class="btn btn-success mb-3" onclick="exportTableToExcel()">Export to Excel</button>
+                        </div>
+                        <table class="table table-bordered table-striped tr.visible">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Project Number</th>
+                                    <th>Customer Name</th>
+                                    <th>Install Date</th>
+                                    <th>Total Labor</th>
+                                    <th>Status</th>
+                                    <th>Source CRM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
           <br>
           <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>           <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
+
+
+
+          <script>
+            async function loadPaidJobs() {
+              try {
+                const response = await fetch('http://localhost:3000/JobsTemp/paid');
+                if (!response.ok) throw new Error('Failed to fetch jobs');
+
+                console.log("yes");
+          
+                const jobs = await response.json();
+                const tableBody = document.getElementById('tableBody');
+                tableBody.innerHTML = '';
+                console.log(jobs);
+          
+                jobs.forEach((job, index) => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                    <td>${job.RequestID}</td>
+                    <td>${job.ProjectNumber || 'N/A'}</td>
+                    <td>${job.CustomerName || 'N/A'}</td>
+                    <td>${job.InstallCompleteDate ? new Date(job.InstallCompleteDate).toLocaleDateString() : 'N/A'}</td>
+                    <td>${job.TotalLabor ? `$${parseFloat(job.TotalLabor).toFixed(2)}` : '$0.00'}</td>
+                    <td>${job.Status}</td>
+                    <td class="text-center"><a style="font-weight: bold;" href="${job.Hyperlink}" target="_blank">View PO ➡️ </a></td>
+                  `;
+          
+                  // Optional animation
+                  setTimeout(() => {
+                    row.classList.add('slide-down');
+                  }, index * 50);
+          
+                  tableBody.appendChild(row);
+                });
+          
+              } catch (err) {
+                console.error(err);
+                alert("An error occurred while loading the paid jobs.");
+              }
+            }
+          
+            document.addEventListener('DOMContentLoaded', loadPaidJobs);
+          </script>
+          
+          <script>
+            function exportTableToExcel() {
+              const table = document.querySelector('table'); // grabs the first table
+              const wb = XLSX.utils.table_to_book(table, { sheet: "Paid Jobs" });
+              XLSX.writeFile(wb, `FleetPay_Paid_Jobs_${new Date().toISOString().split('T')[0]}.xlsx`);
+            }
+          </script>
+          
 
           <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
           <!-- FILL IN HERE WITH TABLE FROM REQUESTS REVIEW -->
